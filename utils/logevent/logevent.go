@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+// LogEvent struct that is also the Based struct.
 type LogEvent struct {
 	Timestamp time.Time              `json:"timestamp"`
 	Message   string                 `json:"message"`
@@ -16,8 +17,15 @@ type LogEvent struct {
 	Extra     map[string]interface{} `json:"-"`
 }
 
+// Formate-Type
+var (
+	retime = regexp.MustCompile(`%{\+([^}]+)}`)
+	revar  = regexp.MustCompile(`%{([\w@]+)}`)
+)
+
 const timeFormat = `2006-01-02T15:04:05.999999999Z`
 
+// AddTag for LogEvent Tags
 func (le *LogEvent) AddTag(tags ...string) {
 	for _, tag := range tags {
 		ftag := le.Format(tag)
@@ -25,16 +33,19 @@ func (le *LogEvent) AddTag(tags ...string) {
 	}
 }
 
+// Marshal LogEvent to Json
 func (le LogEvent) MarshalJSON() (data []byte, err error) {
 	event := le.getJSONMap()
 	return json.Marshal(event)
 }
 
+// Marshal LogEvent to Indent
 func (le LogEvent) MarshalIndent() (data []byte, err error) {
 	event := le.getJSONMap()
 	return json.MarshalIndent(event, "", "\t")
 }
 
+// Get Value form LogEvent'Key
 func (le LogEvent) Get(field string) (v interface{}) {
 	switch field {
 	case "@timestamp":
@@ -47,6 +58,7 @@ func (le LogEvent) Get(field string) (v interface{}) {
 	return
 }
 
+// Get Value-String form LogEvent'Key
 func (le LogEvent) GetString(field string) (v string) {
 	switch field {
 	case "@timestamp":
@@ -85,11 +97,6 @@ func (le LogEvent) getJSONMap() map[string]interface{} {
 	}
 	return event
 }
-
-var (
-	retime = regexp.MustCompile(`%{\+([^}]+)}`)
-	revar  = regexp.MustCompile(`%{([\w@]+)}`)
-)
 
 // FormatWithEnv format string with environment value, ex: %{HOSTNAME}
 func FormatWithEnv(text string) (result string) {
