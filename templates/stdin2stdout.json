@@ -1,0 +1,19 @@
+{
+    "input": [
+        {
+            "type": "stdin"
+        }
+    ],
+    "filter": [
+        {
+            "type": "zeus",
+            "key": "foo",
+            "value": "bar"
+        }
+    ],
+    "output": [
+        {
+            "type": "stdout"
+        }
+    ]
+}

@@ -1,36 +1,45 @@
 package utils
 
 import (
-	"./logevent"
 	"errors"
+	"fmt"
 	"github.com/Sirupsen/logrus"
 	"github.com/codegangsta/inject"
+	"logcool/utils/logevent"
 )
 
+// Output base type interface.
 type TypeOutputConfig interface {
 	TypeConfig
 	Event(event logevent.LogEvent) (err error)
 }
 
+// Output base type struct.
 type OutputConfig struct {
 	CommonConfig
 }
 
+// OutputHandler type interface.
 type OutputHandler interface{}
 
 var (
 	mapOutputHandler = map[string]OutputHandler{}
 )
 
+// Registe OutputHandler.
 func RegistOutputHandler(name string, handler OutputHandler) {
 	mapOutputHandler[name] = handler
 }
 
+// Run Outputs.
 func (t *Config) RunOutputs() (err error) {
+	fmt.Println("Output start ...")
 	_, err = t.Injector.Invoke(t.runOutputs)
+	fmt.Println("Output end ...")
 	return
 }
 
+// run Outputs.
 func (t *Config) runOutputs(outchan OutChan, logger *logrus.Logger) (err error) {
 	outputs, err := t.getOutputs()
 	if err != nil {
@@ -53,6 +62,7 @@ func (t *Config) runOutputs(outchan OutChan, logger *logrus.Logger) (err error) 
 	return
 }
 
+// get Outputs.
 func (t *Config) getOutputs() (outputs []TypeOutputConfig, err error) {
 	for _, confraw := range t.OutputRaw {
 		handler, ok := mapOutputHandler[confraw["type"].(string)]

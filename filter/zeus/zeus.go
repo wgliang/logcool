@@ -1,12 +1,12 @@
-package filteraddfield
+package zeus
 
 import (
-	"../../utils"
-	"../../utils/logevent"
+	"logcool/utils"
+	"logcool/utils/logevent"
 )
 
 const (
-	ModuleName = "add_field"
+	ModuleName = "zeus"
 )
 
 type FilterConfig struct {

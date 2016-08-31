@@ -7,9 +7,9 @@ import (
 	"reflect"
 	"regexp"
 
-	"../utils/logevent"
 	"github.com/codegangsta/inject"
 	"github.com/golang/glog"
+	"logcool/utils/logevent"
 )
 
 // Config struct for the logcool.
@@ -24,6 +24,21 @@ type CommonConfig struct {
 	inject.Injector `json:"-"`
 	Type            string `json:"type"`
 }
+
+// config raw type.
+type ConfigRaw map[string]interface{}
+
+// config struct for config-raw.
+type Config struct {
+	inject.Injector `json:"-"`
+	InputRaw        []ConfigRaw `json:"input,omitempty"`
+	FilterRaw       []ConfigRaw `json:"filter,omitempty"`
+	OutputRaw       []ConfigRaw `json:"output,omitempty"`
+}
+
+// In/Out chan.
+type InChan chan logevent.LogEvent
+type OutChan chan logevent.LogEvent
 
 // Set injector value.
 func (t *CommonConfig) SetInjector(inj inject.Injector) {
@@ -58,21 +73,6 @@ func (t *CommonConfig) Invoke(f interface{}) (refvs []reflect.Value, err error) 
 	return
 }
 
-// config raw type.
-type ConfigRaw map[string]interface{}
-
-// config struct for config-raw.
-type Config struct {
-	inject.Injector `json:"-"`
-	InputRaw        []ConfigRaw `json:"input,omitempty"`
-	FilterRaw       []ConfigRaw `json:"filter,omitempty"`
-	OutputRaw       []ConfigRaw `json:"output,omitempty"`
-}
-
-// In/Out chan.
-type InChan chan logevent.LogEvent
-type OutChan chan logevent.LogEvent
-
 // Load config from file.
 func LoadFromFile(path string) (config Config, err error) {
 	data, err := ioutil.ReadFile(path)
@@ -101,7 +101,7 @@ func LoadFromData(data []byte) (config Config, err error) {
 	}
 
 	config.Injector = inject.New()
-	// config.Map(DefaultLogger)
+	config.Map(Logger)
 
 	inchan := make(InChan, 100)
 	outchan := make(OutChan, 100)

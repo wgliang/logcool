@@ -1,37 +1,48 @@
 package utils
 
 import (
-	"./logevent"
 	"errors"
+	"fmt"
 	"github.com/codegangsta/inject"
+	"logcool/utils/logevent"
 )
 
+// Filter base type interface.
 type TypeFilterConfig interface {
 	TypeConfig
 	Event(logevent.LogEvent) logevent.LogEvent
 }
 
+// Filter base type struct.
 type FilterConfig struct {
 	CommonConfig
 }
 
+// FilterHandler type interface.
 type FilterHandler interface{}
 
 var (
 	mapFilterHandler = map[string]FilterHandler{}
 )
 
+// Registe FilterHandler.
 func RegistFilterHandler(name string, handler FilterHandler) {
 	mapFilterHandler[name] = handler
 }
 
-func (t *Config) RunFilters() (err error) {
-	_, err = t.Injector.Invoke(t.runFilters)
+// Run Filters
+func (c *Config) RunFilters() (err error) {
+	fmt.Println("Filter start...")
+	_, err = c.Injector.Invoke(c.runFilters)
+	fmt.Println("Filter end...")
 	return
 }
 
+// run Filetrs.
 func (c *Config) runFilters(inchan InChan, outchan OutChan) (err error) {
+	fmt.Println("running filter...")
 	filters, err := c.getFilters()
+	fmt.Println(filters)
 	if err != nil {
 		return
 	}
@@ -50,7 +61,9 @@ func (c *Config) runFilters(inchan InChan, outchan OutChan) (err error) {
 	return
 }
 
+// get Filters.
 func (c *Config) getFilters() (filters []TypeFilterConfig, err error) {
+	fmt.Println("--------")
 	for _, confraw := range c.FilterRaw {
 		handler, ok := mapFilterHandler[confraw["type"].(string)]
 		if !ok {

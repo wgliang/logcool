@@ -3,8 +3,8 @@ package outputstdout
 import (
 	"fmt"
 
-	"../../utils"
-	"../../utils/logevent"
+	"logcool/utils"
+	"logcool/utils/logevent"
 )
 
 const (

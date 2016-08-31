@@ -4,16 +4,17 @@ import (
 	"bufio"
 	"bytes"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 	"strings"
 	"time"
 
-	"../../utils"
-	"../../utils/logevent"
 	"github.com/Sirupsen/logrus"
 	"github.com/fsnotify/fsnotify"
+	"logcool/utils"
+	"logcool/utils/logevent"
 )
 
 const (
@@ -49,6 +50,7 @@ func DefaultInputConfig() InputConfig {
 }
 
 func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err error) {
+	fmt.Println("fileinput InitHandler...")
 	conf := DefaultInputConfig()
 	if err = utils.ReflectConfig(confraw, &conf); err != nil {
 		return
@@ -63,6 +65,8 @@ func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err e
 }
 
 func (t *InputConfig) Start() {
+	fmt.Println("fileinput start...")
+	fmt.Println("path : " + t.Path)
 	t.Invoke(t.start)
 }
 
