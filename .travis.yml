@@ -1,0 +1,15 @@
+language: go
+
+install:
+  - go get -d -t -v ./... && go build -v ./...
+
+go:
+  - 1.5
+  - 1.6
+  - 1.7
+  - tip
+
+script:
+  - go vet ./...
+  - go test -v -coverprofile=coverage.txt -covermode=atomic
+  - go build -o ./logcool ./...
