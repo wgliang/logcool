@@ -15,18 +15,14 @@ type OutputConfig struct {
 	utils.OutputConfig
 }
 
-func DefaultOutputConfig() OutputConfig {
-	return OutputConfig{
+func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeOutputConfig, err error) {
+	conf := OutputConfig{
 		OutputConfig: utils.OutputConfig{
 			CommonConfig: utils.CommonConfig{
 				Type: ModuleName,
 			},
 		},
 	}
-}
-
-func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeOutputConfig, err error) {
-	conf := DefaultOutputConfig()
 	if err = utils.ReflectConfig(confraw, &conf); err != nil {
 		return
 	}

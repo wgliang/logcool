@@ -2,20 +2,16 @@ package cmd
 
 import (
 	"log"
-	"logcool/utils"
-	_ "logcool/utils/loader" // module loader
-	_ "logcool/utils/logo"
 	"os"
 	"os/signal"
-	"runtime"
 	"syscall"
+
+	"logcool/utils"
+	_ "logcool/utils/loader"
+	_ "logcool/utils/logo"
 )
 
 func Logcool(confpath ...string) (err error) {
-	logger := utils.Logger
-	if runtime.GOMAXPROCS(0) == 1 && runtime.NumCPU() > 1 {
-		logger.Warnf("set GOMAXPROCS = %d to get better performance", runtime.NumCPU())
-	}
 	var conf utils.Config
 	if len(confpath) <= 0 {
 		conf, err = utils.LoadDefaultConfig()

@@ -21,18 +21,14 @@ type InputConfig struct {
 	hostname string `json:"-"`
 }
 
-func DefaultInputConfig() InputConfig {
-	return InputConfig{
+func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err error) {
+	conf := InputConfig{
 		InputConfig: utils.InputConfig{
 			CommonConfig: utils.CommonConfig{
 				Type: ModuleName,
 			},
 		},
 	}
-}
-
-func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err error) {
-	conf := DefaultInputConfig()
 	if err = utils.ReflectConfig(confraw, &conf); err != nil {
 		return
 	}

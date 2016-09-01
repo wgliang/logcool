@@ -24,18 +24,18 @@ const (
 type InputConfig struct {
 	utils.InputConfig
 	Path                 string `json:"path"`
-	StartPos             string `json:"start_position,omitempty"` // one of ["beginning", "end"]
-	SinceDBPath          string `json:"sincedb_path,omitempty"`
-	SinceDBWriteInterval int    `json:"sincedb_write_interval,omitempty"`
+	StartPos             string `json:"start_position"`
+	SinceDBPath          string `json:"sincedb_path"`
+	SinceDBWriteInterval int    `json:"sincedb_write_interval"`
 
-	hostname            string                  `json:"-"`
-	SinceDBInfos        map[string]*SinceDBInfo `json:"-"`
-	sinceDBLastInfosRaw []byte                  `json:"-"`
-	SinceDBLastSaveTime time.Time               `json:"-"`
+	hostname            string                  `json:"hostname"`
+	SinceDBInfos        map[string]*SinceDBInfo `json:"sinceDBInfos"`
+	sinceDBLastInfosRaw []byte                  `json:"sinceDBLastInfosRaw"`
+	SinceDBLastSaveTime time.Time               `json:"SinceDBLastSaveTime"`
 }
 
-func DefaultInputConfig() InputConfig {
-	return InputConfig{
+func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err error) {
+	conf := InputConfig{
 		InputConfig: utils.InputConfig{
 			CommonConfig: utils.CommonConfig{
 				Type: ModuleName,
@@ -47,11 +47,6 @@ func DefaultInputConfig() InputConfig {
 
 		SinceDBInfos: map[string]*SinceDBInfo{},
 	}
-}
-
-func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err error) {
-	fmt.Println("fileinput InitHandler...")
-	conf := DefaultInputConfig()
 	if err = utils.ReflectConfig(confraw, &conf); err != nil {
 		return
 	}

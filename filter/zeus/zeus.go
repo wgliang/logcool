@@ -15,18 +15,14 @@ type FilterConfig struct {
 	Value string `json:"value"`
 }
 
-func DefaultFilterConfig() FilterConfig {
-	return FilterConfig{
+func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeFilterConfig, err error) {
+	conf := FilterConfig{
 		FilterConfig: utils.FilterConfig{
 			CommonConfig: utils.CommonConfig{
 				Type: ModuleName,
 			},
 		},
 	}
-}
-
-func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeFilterConfig, err error) {
-	conf := DefaultFilterConfig()
 	if err = utils.ReflectConfig(confraw, &conf); err != nil {
 		return
 	}
