@@ -1,6 +1,6 @@
 ![Logcool](./logcool.jpg)
 
-# logcool
+# logcool [![Version Status](https://img.shields.io/badge/logcool-release-blue.svg)](https://github.com/wgliang/logcool/releases/tag/v0.1.0)
 
 [![Build Status](https://travis-ci.org/wgliang/logcool.svg?branch=master)](https://travis-ci.org/wgliang/logcool.svg?branch=master)
 [![GoDoc](https://godoc.org/github.com/wgliang/logcool?status.svg)](https://godoc.org/github.com/wgliang/logcool)
