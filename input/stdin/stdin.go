@@ -1,17 +1,12 @@
-package fileinput
+package stdininput
 
 import (
 	"bufio"
-	"bytes"
-	"errors"
-	"io"
+	"fmt"
 	"os"
-	"path/filepath"
-	"strings"
 	"time"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/fsnotify/fsnotify"
 	"logcool/utils"
 	"logcool/utils/logevent"
 )
@@ -21,13 +16,15 @@ const (
 )
 
 type InputConfig struct {
-	config.InputConfig
+	utils.InputConfig
+
+	hostname string `json:"-"`
 }
 
 func DefaultInputConfig() InputConfig {
 	return InputConfig{
-		InputConfig: config.InputConfig{
-			CommonConfig: config.CommonConfig{
+		InputConfig: utils.InputConfig{
+			CommonConfig: utils.CommonConfig{
 				Type: ModuleName,
 			},
 		},
@@ -60,28 +57,24 @@ func (t *InputConfig) start(logger *logrus.Logger, inchan utils.InChan) (err err
 	}()
 
 	running := true
-	fmt.Print("logcool=>")
 	reader := bufio.NewReader(os.Stdin)
 	for running {
+		time.Sleep(300000 * time.Nanosecond)
+		fmt.Print("logcool#")
 		data, _, _ := reader.ReadLine()
 		command := string(data)
-		if command == "quit" {
-			return
+		event := logevent.LogEvent{
+			Timestamp: time.Now(),
+			Message:   command,
+			Extra: map[string]interface{}{
+				"host": t.hostname,
+			},
 		}
-		fmt.Println("logcool=>", command)
-		fmt.Print("logcool=>")
+		inchan <- event
+		if command == "quit" {
+			os.Exit(0)
+		}
 	}
 
-	event := logevent.LogEvent{
-		Timestamp: time.Now(),
-		Message:   line,
-		Extra: map[string]interface{}{
-			"host":   t.hostname,
-			"path":   "",
-			"offset": since.Offset,
-		},
-	}
-
-	inchan <- event
 	return
 }

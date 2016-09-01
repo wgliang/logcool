@@ -2,7 +2,6 @@ package utils
 
 import (
 	"errors"
-	"fmt"
 	"github.com/codegangsta/inject"
 )
 
@@ -31,23 +30,18 @@ func RegistInputHandler(name string, handler InputHandler) {
 
 // Run Inputs.
 func (t *Config) RunInputs() (err error) {
-	fmt.Println("Input start...")
 	_, err = t.Injector.Invoke(t.runInputs)
-	fmt.Println("Input end...")
 	return
 }
 
 // run Inputs.
 func (t *Config) runInputs(inchan InChan) (err error) {
-	fmt.Println(t)
 	inputs, err := t.getInputs(inchan)
-
 	if err != nil {
-		fmt.Println("============")
 		return
 	}
+
 	for _, input := range inputs {
-		fmt.Println(input)
 		go input.Start()
 	}
 	return
@@ -55,12 +49,8 @@ func (t *Config) runInputs(inchan InChan) (err error) {
 
 // get Inputs.
 func (t *Config) getInputs(inchan InChan) (inputs []TypeInputConfig, err error) {
-
 	for _, confraw := range t.InputRaw {
-		fmt.Println(confraw)
 		handler, ok := mapInputHandler[confraw["type"].(string)]
-		fmt.Println("??????")
-		fmt.Println(handler)
 		if !ok {
 			err = errors.New(confraw["type"].(string))
 			return

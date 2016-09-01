@@ -2,7 +2,6 @@ package utils
 
 import (
 	"errors"
-	"fmt"
 	"github.com/codegangsta/inject"
 	"logcool/utils/logevent"
 )
@@ -32,17 +31,13 @@ func RegistFilterHandler(name string, handler FilterHandler) {
 
 // Run Filters
 func (c *Config) RunFilters() (err error) {
-	fmt.Println("Filter start...")
 	_, err = c.Injector.Invoke(c.runFilters)
-	fmt.Println("Filter end...")
 	return
 }
 
 // run Filetrs.
 func (c *Config) runFilters(inchan InChan, outchan OutChan) (err error) {
-	fmt.Println("running filter...")
 	filters, err := c.getFilters()
-	fmt.Println(filters)
 	if err != nil {
 		return
 	}
@@ -63,7 +58,6 @@ func (c *Config) runFilters(inchan InChan, outchan OutChan) (err error) {
 
 // get Filters.
 func (c *Config) getFilters() (filters []TypeFilterConfig, err error) {
-	fmt.Println("--------")
 	for _, confraw := range c.FilterRaw {
 		handler, ok := mapFilterHandler[confraw["type"].(string)]
 		if !ok {

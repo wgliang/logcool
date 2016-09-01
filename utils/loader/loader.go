@@ -1,16 +1,16 @@
 package loader
 
 import (
-	"fmt"
 	"logcool/filter/zeus"
 	"logcool/input/file"
+	"logcool/input/stdin"
 	"logcool/output/stdout"
 	"logcool/utils"
 )
 
 func init() {
-	fmt.Println("modulers loader...")
 	utils.RegistInputHandler(fileinput.ModuleName, fileinput.InitHandler)
+	utils.RegistInputHandler(stdininput.ModuleName, stdininput.InitHandler)
 
 	utils.RegistFilterHandler(zeus.ModuleName, zeus.InitHandler)
 

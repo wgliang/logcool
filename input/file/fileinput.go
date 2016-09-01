@@ -65,8 +65,6 @@ func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err e
 }
 
 func (t *InputConfig) Start() {
-	fmt.Println("fileinput start...")
-	fmt.Println("path : " + t.Path)
 	t.Invoke(t.start)
 }
 

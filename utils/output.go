@@ -2,7 +2,6 @@ package utils
 
 import (
 	"errors"
-	"fmt"
 	"github.com/Sirupsen/logrus"
 	"github.com/codegangsta/inject"
 	"logcool/utils/logevent"
@@ -33,9 +32,7 @@ func RegistOutputHandler(name string, handler OutputHandler) {
 
 // Run Outputs.
 func (t *Config) RunOutputs() (err error) {
-	fmt.Println("Output start ...")
 	_, err = t.Injector.Invoke(t.runOutputs)
-	fmt.Println("Output end ...")
 	return
 }
 

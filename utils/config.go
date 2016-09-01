@@ -12,6 +12,28 @@ import (
 	"logcool/utils/logevent"
 )
 
+const defaultconfig = `
+{
+    "input": [
+        {
+            "type": "stdin"
+        }
+    ],
+    "filter": [
+        {
+            "type": "zeus",
+            "key": "foo",
+            "value": "bar"
+        }
+    ],
+    "output": [
+        {
+            "type": "stdout"
+        }
+    ]
+}
+`
+
 // Config struct for the logcool.
 type TypeConfig interface {
 	SetInjector(inj inject.Injector)
@@ -77,7 +99,6 @@ func (t *CommonConfig) Invoke(f interface{}) (refvs []reflect.Value, err error) 
 func LoadFromFile(path string) (config Config, err error) {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
-		glog.Errorln(err)
 		return
 	}
 
@@ -87,6 +108,11 @@ func LoadFromFile(path string) (config Config, err error) {
 // Laod config from string.
 func LoadFromString(text string) (config Config, err error) {
 	return LoadFromData([]byte(text))
+}
+
+// Laod default-config from string.
+func LoadDefaultConfig() (config Config, err error) {
+	return LoadFromString(defaultconfig)
 }
 
 // Load config from data([]byte).
