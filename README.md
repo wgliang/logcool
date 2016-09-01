@@ -18,7 +18,7 @@ Logcool is still in its infancy, then there will be a big change, especially in 
 
 ## Getting started
 
-Logcool can be installed either on your computer for building applications or on servers for running them. To get started, [check out the installation instructions in the documentation](https://godoc.org/github.com/wgliang/logcool).
+Logcool can collect all-types los or event-flow data, and support some input/output types.Besides,you can  new your's plugs if you need it. To get started, [check out the installation instructions in the documentation](https://godoc.org/github.com/wgliang/logcool).
 
 ## Other Contributor
 
