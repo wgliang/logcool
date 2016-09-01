@@ -3,7 +3,6 @@
         {
             "type": "file",
             "path": "./tmp/log/log.log",
-            "since_path": "",
             "start_position": "beginning"
         }
     ],
@@ -16,7 +15,13 @@
     ],
     "output": [
         {
-            "type": "stdout"
+            "type": "redis",
+            "key": "logcool",
+            "host": "127.0.0.1:6379",
+            "password":"",
+            "data_type": "list",
+            "timeout": 5,
+            "reconnect_interval": 1
         }
     ]
 }

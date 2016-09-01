@@ -1,3 +1,5 @@
+// Input-plug: stdininput
+// The plug's function input the data from the standard-input.
 package stdininput
 
 import (
@@ -15,12 +17,14 @@ const (
 	ModuleName = "stdin"
 )
 
+// Define stdininput' config.
 type InputConfig struct {
 	utils.InputConfig
 
 	hostname string `json:"-"`
 }
 
+// Init stdininput Handler.
 func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err error) {
 	conf := InputConfig{
 		InputConfig: utils.InputConfig{
@@ -41,11 +45,12 @@ func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err e
 	return
 }
 
+// Input's start,and this is the main function of input.
 func (t *InputConfig) Start() {
-	t.Invoke(t.start)
+	t.Invoke(t.echo)
 }
 
-func (t *InputConfig) start(logger *logrus.Logger, inchan utils.InChan) (err error) {
+func (t *InputConfig) echo(logger *logrus.Logger, inchan utils.InChan) (err error) {
 	defer func() {
 		if err != nil {
 			logger.Errorln(err)
@@ -55,6 +60,7 @@ func (t *InputConfig) start(logger *logrus.Logger, inchan utils.InChan) (err err
 	running := true
 	reader := bufio.NewReader(os.Stdin)
 	for running {
+		// Sleep some Nanoseconds wait for event have been deal.
 		time.Sleep(300000 * time.Nanosecond)
 		fmt.Print("logcool#")
 		data, _, _ := reader.ReadLine()

@@ -1,8 +1,9 @@
+// Output-plug: outputredis
+// The plug's function take the event-data into redis.
 package outputredis
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	log "github.com/Sirupsen/logrus"
@@ -16,6 +17,7 @@ const (
 	ModuleName = "redis"
 )
 
+// Define outputredis' config.
 type OutputConfig struct {
 	utils.OutputConfig
 	Key               string `json:"key"`
@@ -29,6 +31,7 @@ type OutputConfig struct {
 	evchan chan logevent.LogEvent
 }
 
+// Init outputredis Handler.
 func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeOutputConfig, err error) {
 	conf := OutputConfig{
 		OutputConfig: utils.OutputConfig{
@@ -36,10 +39,6 @@ func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeOutputConfig, err 
 				Type: ModuleName,
 			},
 		},
-		Key:               "logcool",
-		DataType:          "list",
-		Timeout:           5,
-		ReconnectInterval: 1,
 
 		evchan: make(chan logevent.LogEvent),
 	}
@@ -48,27 +47,28 @@ func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeOutputConfig, err 
 	}
 	conf.conns = initRedisPool(conf.Host, conf.Password)
 
-	go conf.loop()
+	go conf.loopEvent()
 
 	retconf = &conf
 	return
 }
 
-func (self *OutputConfig) Event(event logevent.LogEvent) (err error) {
-	self.evchan <- event
+// Input's event,and this is the main function of output.
+func (oc *OutputConfig) Event(event logevent.LogEvent) (err error) {
+	oc.evchan <- event
 	return
 }
 
-func (self *OutputConfig) loop() (err error) {
+func (oc *OutputConfig) loopEvent() (err error) {
 	for {
-		event := <-self.evchan
-		self.sendEvent(event)
+		event := <-oc.evchan
+		oc.sendEvent(event)
 	}
 
 	return
 }
 
-func (self *OutputConfig) sendEvent(event logevent.LogEvent) (err error) {
+func (oc *OutputConfig) sendEvent(event logevent.LogEvent) (err error) {
 	var (
 		conn redis.Conn
 		raw  []byte
@@ -79,12 +79,13 @@ func (self *OutputConfig) sendEvent(event logevent.LogEvent) (err error) {
 		log.Errorf("event Marshal failed: %v", event)
 		return
 	}
-	key = event.Format(self.Key)
+	key = event.Format(oc.Key)
 
-	conn = self.conns.Get()
+	// get a connection from pool
+	conn = oc.conns.Get()
 	defer conn.Close()
 
-	switch self.DataType {
+	switch oc.DataType {
 	case "list":
 		_, err = conn.Do("rpush", key, raw)
 	case "set":
@@ -94,18 +95,20 @@ func (self *OutputConfig) sendEvent(event logevent.LogEvent) (err error) {
 	case "append":
 		_, err = conn.Do("publish", key, raw)
 	default:
-		err = errors.New("unknown DataType: " + self.DataType)
+		err = errors.New("unknown DataType: " + oc.DataType)
 	}
 
 	return
 }
 
+// init a redis connection pool.
 func initRedisPool(server, password string) *redis.Pool {
 	return &redis.Pool{
 		MaxIdle:     200 * 2,
 		MaxActive:   200 * 2,
 		IdleTimeout: 240 * time.Second,
 		Dial: func() (redis.Conn, error) {
+			// test tcp.
 			c, err := redis.Dial("tcp", server)
 			if err != nil {
 				return nil, err

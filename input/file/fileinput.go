@@ -1,10 +1,12 @@
+// Input-plug: fileinput
+// The plug's function is real-time monitoring of the specified file, once the data is
+//updated to record the data.
 package fileinput
 
 import (
 	"bufio"
 	"bytes"
 	"errors"
-	"fmt"
 	"io"
 	"os"
 	"path/filepath"
@@ -21,19 +23,21 @@ const (
 	ModuleName = "file"
 )
 
+// Define fileinput' config.
 type InputConfig struct {
 	utils.InputConfig
-	Path                 string `json:"path"`
-	StartPos             string `json:"start_position"`
-	SinceDBPath          string `json:"sincedb_path"`
-	SinceDBWriteInterval int    `json:"sincedb_write_interval"`
+	Path          string `json:"path"`
+	StartPos      string `json:"start_position"`
+	SincePath     string `json:"since_path"`
+	SinceInterval int    `json:"since_interval"`
 
-	hostname            string                  `json:"hostname"`
-	SinceDBInfos        map[string]*SinceDBInfo `json:"sinceDBInfos"`
-	sinceDBLastInfosRaw []byte                  `json:"sinceDBLastInfosRaw"`
-	SinceDBLastSaveTime time.Time               `json:"SinceDBLastSaveTime"`
+	hostname          string                  `json:"hostname"`
+	SinceDBInfos      map[string]*SinceDBInfo `json:"sinceDBInfos"`
+	sinceLastInfos    []byte                  `json:"sinceLastInfos"`
+	SinceLastSaveTime time.Time               `json:"sinceLastSaveTime"`
 }
 
+// Init fileinput Handler.
 func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err error) {
 	conf := InputConfig{
 		InputConfig: utils.InputConfig{
@@ -41,9 +45,9 @@ func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err e
 				Type: ModuleName,
 			},
 		},
-		StartPos:             "end",
-		SinceDBPath:          ".sincedb.json",
-		SinceDBWriteInterval: 15,
+		StartPos:      "end",
+		SincePath:     ".sincedb.json",
+		SinceInterval: 15,
 
 		SinceDBInfos: map[string]*SinceDBInfo{},
 	}
@@ -59,11 +63,12 @@ func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err e
 	return
 }
 
-func (t *InputConfig) Start() {
-	t.Invoke(t.start)
+// Input's start,and this is the main function of input.
+func (ic *InputConfig) Start() {
+	ic.Invoke(ic.start)
 }
 
-func (t *InputConfig) start(logger *logrus.Logger, inchan utils.InChan) (err error) {
+func (ic *InputConfig) start(logger *logrus.Logger, inchan utils.InChan) (err error) {
 	defer func() {
 		if err != nil {
 			logger.Errorln(err)
@@ -75,15 +80,15 @@ func (t *InputConfig) start(logger *logrus.Logger, inchan utils.InChan) (err err
 		fi      os.FileInfo
 	)
 
-	if err = t.LoadSinceDBInfos(); err != nil {
+	if err = ic.LoadSinceData(); err != nil {
 		return
 	}
 
-	if matches, err = filepath.Glob(t.Path); err != nil {
+	if matches, err = filepath.Glob(ic.Path); err != nil {
 		return err
 	}
 
-	go t.CheckSaveSinceDBInfosLoop()
+	go ic.LoopCheckSaveSinceInfos()
 
 	for _, fpath := range matches {
 		if fpath, err = filepath.EvalSymlinks(fpath); err != nil {
@@ -92,24 +97,24 @@ func (t *InputConfig) start(logger *logrus.Logger, inchan utils.InChan) (err err
 		}
 
 		if fi, err = os.Stat(fpath); err != nil {
-			logger.Errorf("stat(%q) failed\n%s", t.Path, err)
+			logger.Errorf("stat(%q) failed\n%s", ic.Path, err)
 			continue
 		}
 
 		if fi.IsDir() {
-			logger.Infof("Skipping directory: %q", t.Path)
+			logger.Infof("Skipping directory: %q", ic.Path)
 			continue
 		}
 
 		readEventChan := make(chan fsnotify.Event, 10)
-		go t.fileReadLoop(readEventChan, fpath, logger, inchan)
-		go t.fileWatchLoop(readEventChan, fpath, fsnotify.Create|fsnotify.Write)
+		go ic.loopRead(readEventChan, fpath, logger, inchan)
+		go ic.loopWatch(readEventChan, fpath, fsnotify.Create|fsnotify.Write)
 	}
 
 	return
 }
 
-func (t *InputConfig) fileReadLoop(
+func (ic *InputConfig) loopRead(
 	readEventChan chan fsnotify.Event,
 	fpath string,
 	logger *logrus.Logger,
@@ -133,13 +138,13 @@ func (t *InputConfig) fileReadLoop(
 		return
 	}
 
-	if since, ok = t.SinceDBInfos[fpath]; !ok {
-		t.SinceDBInfos[fpath] = &SinceDBInfo{}
-		since = t.SinceDBInfos[fpath]
+	if since, ok = ic.SinceDBInfos[fpath]; !ok {
+		ic.SinceDBInfos[fpath] = &SinceDBInfo{}
+		since = ic.SinceDBInfos[fpath]
 	}
 
 	if since.Offset == 0 {
-		if t.StartPos == "end" {
+		if ic.StartPos == "end" {
 			whence = os.SEEK_END
 		} else {
 			whence = os.SEEK_SET
@@ -153,7 +158,7 @@ func (t *InputConfig) fileReadLoop(
 	}
 	defer fp.Close()
 
-	if truncated, err = isFileTruncated(fp, since); err != nil {
+	if truncated, err = isTruncated(fp, since); err != nil {
 		return
 	}
 	if truncated {
@@ -166,10 +171,10 @@ func (t *InputConfig) fileReadLoop(
 	}
 
 	for {
-		if line, size, err = readline(reader, buffer); err != nil {
+		if line, size, err = readLine(reader, buffer); err != nil {
 			if err == io.EOF {
 				watchev := <-readEventChan
-				logger.Debug("fileReadLoop recv:", watchev)
+				logger.Debug("loopRead recv:", watchev)
 				if watchev.Op&fsnotify.Create == fsnotify.Create {
 					logger.Warnf("File recreated, seeking to beginning: %q", fpath)
 					fp.Close()
@@ -178,7 +183,7 @@ func (t *InputConfig) fileReadLoop(
 						return
 					}
 				}
-				if truncated, err = isFileTruncated(fp, since); err != nil {
+				if truncated, err = isTruncated(fp, since); err != nil {
 					return
 				}
 				if truncated {
@@ -201,7 +206,7 @@ func (t *InputConfig) fileReadLoop(
 			Timestamp: time.Now(),
 			Message:   line,
 			Extra: map[string]interface{}{
-				"host":   t.hostname,
+				"host":   ic.hostname,
 				"path":   fpath,
 				"offset": since.Offset,
 			},
@@ -211,12 +216,11 @@ func (t *InputConfig) fileReadLoop(
 
 		logger.Debugf("%q %v", event.Message, event)
 		inchan <- event
-		//self.SaveSinceDBInfos()
-		t.CheckSaveSinceDBInfos()
+		ic.CheckSaveSinceDBInfos()
 	}
 }
 
-func (self *InputConfig) fileWatchLoop(readEventChan chan fsnotify.Event, fpath string, op fsnotify.Op) (err error) {
+func (self *InputConfig) loopWatch(readEventChan chan fsnotify.Event, fpath string, op fsnotify.Op) (err error) {
 	var (
 		event fsnotify.Event
 	)
@@ -229,7 +233,7 @@ func (self *InputConfig) fileWatchLoop(readEventChan chan fsnotify.Event, fpath 
 	return
 }
 
-func isFileTruncated(fp *os.File, since *SinceDBInfo) (truncated bool, err error) {
+func isTruncated(fp *os.File, since *SinceDBInfo) (truncated bool, err error) {
 	var (
 		fi os.FileInfo
 	)
@@ -258,7 +262,7 @@ func openfile(fpath string, offset int64, whence int) (fp *os.File, reader *bufi
 	return
 }
 
-func readline(reader *bufio.Reader, buffer *bytes.Buffer) (line string, size int, err error) {
+func readLine(reader *bufio.Reader, buffer *bytes.Buffer) (line string, size int, err error) {
 	var (
 		segment []byte
 	)

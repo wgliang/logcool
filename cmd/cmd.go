@@ -1,7 +1,9 @@
+// Run Logcool in std, and the filter is zeus.You can input "hello",and it will
+// return a formate hello fmt.
 package cmd
 
 import (
-	"log"
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -11,15 +13,17 @@ import (
 	_ "logcool/utils/logo"
 )
 
+// Run Logcool in std, and the filter is zeus.ps:the confpath you can ignore it if you like
 func Logcool(confpath ...string) (err error) {
 	var conf utils.Config
+	// Check the path that you input,if nil will use default config.
 	if len(confpath) <= 0 {
 		conf, err = utils.LoadDefaultConfig()
 		if err != nil {
 			return
 		}
 	} else if _, err = os.Stat(confpath[0]); err != nil {
-		log.Println("Can not find config-file " + confpath[0] + " and will use default config(stdin2stdout)!")
+		fmt.Println("Can not find config-file " + confpath[0] + " and will use default config(stdin2stdout)!")
 		conf, err = utils.LoadDefaultConfig()
 		if err != nil {
 			return
@@ -27,22 +31,22 @@ func Logcool(confpath ...string) (err error) {
 	} else {
 		conf, err = utils.LoadFromFile(confpath[0])
 		if err != nil {
-			log.Println("Config-file " + confpath[0] + " formate error and will use default config(stdin2stdout)!")
+			fmt.Println("Config-file " + confpath[0] + " formate error and will use default config(stdin2stdout)!")
 			conf, err = utils.LoadDefaultConfig()
 			if err != nil {
 				return
 			}
 		}
 	}
-
+	// Run all Input plugs
 	if err = conf.RunInputs(); err != nil {
 		return
 	}
-
+	// Run all Filter plugs
 	if err = conf.RunFilters(); err != nil {
 		return
 	}
-
+	// Run all Output plugs
 	if err = conf.RunOutputs(); err != nil {
 		return
 	}
@@ -52,7 +56,7 @@ func Logcool(confpath ...string) (err error) {
 	signal.Notify(chExit, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL)
 	select {
 	case <-chExit:
-		log.Println("logcool EXIT...Bye.")
+		fmt.Println("logcool EXIT...Bye.")
 	}
 	return
 }

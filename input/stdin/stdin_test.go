@@ -1,4 +1,4 @@
-package fileinput
+package stdininput
 
 import (
 	"fmt"
@@ -6,10 +6,6 @@ import (
 
 	"logcool/utils"
 )
-
-func Test_DefaultInputConfig(t *testing.T) {
-	DefaultInputConfig()
-}
 
 func Test_InitHandler(t *testing.T) {
 	config := utils.ConfigRaw{}
