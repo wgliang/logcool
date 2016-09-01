@@ -11,5 +11,4 @@ go:
 
 script:
   - go vet ./...
-  - go test -v -coverprofile=coverage.txt -covermode=atomic
   - go build 
