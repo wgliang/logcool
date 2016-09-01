@@ -1,10 +1,26 @@
+# logcool [![Version Status](https://img.shields.io/badge/release-v0.1.0-orange.svg)](https://github.com/wgliang/logcool/releases/tag/v0.1.0)
+
+Logcool is an open source project to collect, filter ,transfer and response any log or event-flow data as a lightweight system.
+
 ![Logcool](./logcool.jpg)
 
-# logcool [![Version Status](https://img.shields.io/badge/release-v0.1.0-orange.svg)](https://github.com/wgliang/logcool/releases/tag/v0.1.0)
+Logcool's design learn from Heka and Logstash and it's implementation was inspired by gogstash. What's more, 
+the logcool's goal is to be a completely independent project and not much rely on other non-standard libiaries.
+
+Logcool is still in its infancy, then there will be a big change, especially in terms of code.So it is not recommended for commercial use now.
 
 [![Build Status](https://travis-ci.org/wgliang/logcool.svg?branch=master)](https://travis-ci.org/wgliang/logcool.svg?branch=master)
 [![GoDoc](https://godoc.org/github.com/wgliang/logcool?status.svg)](https://godoc.org/github.com/wgliang/logcool)
 [![Join the chat at https://gitter.im/logcool/Lobby](https://badges.gitter.im/logcool/Lobby.svg)](https://gitter.im/logcool/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+## Getting started
 
-A high performance and near real time log collector. And it's design for reference Heka and Logstash,it's implementation was inspired by gogstash. What's more, the logcool‘s goal is to be a completely independent project and not rely on other non-standard libiaries.
+Logcool can be installed either on your computer for building applications or on servers for running them. To get started, [check out the installation instructions in the documentation](https://godoc.org/github.com/wgliang/logcool).
+
+## Other Contributor
+
+Logcool learn from gogstash much. Thank you for your contribution, and I also learn a lot from your project. @tsaikd
+
+## Licensing
+
+Logcool is licensed under the Apache License, Version 2.0. See LICENSE for the full license text.
