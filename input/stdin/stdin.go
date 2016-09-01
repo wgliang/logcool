@@ -21,7 +21,7 @@ const (
 type InputConfig struct {
 	utils.InputConfig
 
-	hostname string `json:"-"`
+	hostname string
 }
 
 // Init stdininput Handler.

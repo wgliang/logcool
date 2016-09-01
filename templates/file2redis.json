@@ -3,6 +3,7 @@
         {
             "type": "file",
             "path": "./tmp/log/log.log",
+            "since_path": "",
             "start_position": "beginning"
         }
     ],

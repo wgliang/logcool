@@ -31,10 +31,10 @@ type InputConfig struct {
 	SincePath     string `json:"since_path"`
 	SinceInterval int    `json:"since_interval"`
 
-	hostname          string                  `json:"hostname"`
-	SinceDBInfos      map[string]*SinceDBInfo `json:"sinceDBInfos"`
-	sinceLastInfos    []byte                  `json:"sinceLastInfos"`
-	SinceLastSaveTime time.Time               `json:"sinceLastSaveTime"`
+	hostname          string
+	SinceDBInfos      map[string]*SinceDBInfo
+	sinceLastInfos    []byte
+	SinceLastSaveTime time.Time
 }
 
 // Init fileinput Handler.
