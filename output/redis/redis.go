@@ -86,10 +86,12 @@ func (self *OutputConfig) sendEvent(event logevent.LogEvent) (err error) {
 
 	switch self.DataType {
 	case "list":
-		fmt.Println(string(key) + string(raw))
 		_, err = conn.Do("rpush", key, raw)
-		fmt.Println(err)
+	case "set":
+		_, err = conn.Do("set", key, raw)
 	case "channel":
+		_, err = conn.Do("publish", key, raw)
+	case "append":
 		_, err = conn.Do("publish", key, raw)
 	default:
 		err = errors.New("unknown DataType: " + self.DataType)
