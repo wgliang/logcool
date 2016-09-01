@@ -91,5 +91,4 @@ func (self *InputConfig) LoopCheckSaveSinceInfos() (err error) {
 			return
 		}
 	}
-	return
 }

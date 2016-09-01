@@ -230,7 +230,6 @@ func (self *InputConfig) loopWatch(readEventChan chan fsnotify.Event, fpath stri
 		}
 		readEventChan <- event
 	}
-	return
 }
 
 func isTruncated(fp *os.File, since *SinceDBInfo) (truncated bool, err error) {
@@ -289,8 +288,6 @@ func readLine(reader *bufio.Reader, buffer *bytes.Buffer) (line string, size int
 			return
 		}
 	}
-
-	return
 }
 
 func isPartialLine(segment []byte) bool {
@@ -351,6 +348,4 @@ func waitWatchEvent(fpath string, op fsnotify.Op) (event fsnotify.Event, err err
 			return
 		}
 	}
-
-	return
 }

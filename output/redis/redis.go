@@ -64,8 +64,6 @@ func (oc *OutputConfig) loopEvent() (err error) {
 		event := <-oc.evchan
 		oc.sendEvent(event)
 	}
-
-	return
 }
 
 func (oc *OutputConfig) sendEvent(event logevent.LogEvent) (err error) {
