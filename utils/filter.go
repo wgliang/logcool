@@ -3,7 +3,7 @@ package utils
 import (
 	"errors"
 	"github.com/codegangsta/inject"
-	"logcool/utils/logevent"
+	"github.com/wgliang/logcool/utils/logevent"
 )
 
 // Filter base type interface.

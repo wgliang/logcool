@@ -9,7 +9,7 @@ import (
 	"os"
 	"strings"
 
-	"logcool/utils"
+	"github.com/wgliang/logcool/utils"
 )
 
 const DEFAULTTEMPLATE = "./templates"

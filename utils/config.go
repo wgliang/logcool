@@ -9,7 +9,7 @@ import (
 
 	"github.com/codegangsta/inject"
 	"github.com/golang/glog"
-	"logcool/utils/logevent"
+	"github.com/wgliang/logcool/utils/logevent"
 )
 
 const defaultconfig = `

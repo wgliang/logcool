@@ -9,8 +9,8 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/garyburd/redigo/redis"
 
-	"logcool/utils"
-	"logcool/utils/logevent"
+	"github.com/wgliang/logcool/utils"
+	"github.com/wgliang/logcool/utils/logevent"
 )
 
 const (

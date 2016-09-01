@@ -1,12 +1,12 @@
 package loader
 
 import (
-	"logcool/filter/zeus"
-	"logcool/input/file"
-	"logcool/input/stdin"
-	"logcool/output/redis"
-	"logcool/output/stdout"
-	"logcool/utils"
+	"github.com/wgliang/logcool/filter/zeus"
+	"github.com/wgliang/logcool/input/file"
+	"github.com/wgliang/logcool/input/stdin"
+	"github.com/wgliang/logcool/output/redis"
+	"github.com/wgliang/logcool/output/stdout"
+	"github.com/wgliang/logcool/utils"
 )
 
 func init() {

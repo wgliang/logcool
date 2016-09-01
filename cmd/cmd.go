@@ -8,9 +8,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"logcool/utils"
-	_ "logcool/utils/loader"
-	_ "logcool/utils/logo"
+	"github.com/wgliang/logcool/utils"
+	_ "github.com/wgliang/logcool/utils/loader"
+	_ "github.com/wgliang/logcool/utils/logo"
 )
 
 // Run Logcool in std, and the filter is zeus.ps:the confpath you can ignore it if you like

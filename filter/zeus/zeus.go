@@ -3,8 +3,8 @@
 package zeus
 
 import (
-	"logcool/utils"
-	"logcool/utils/logevent"
+	"github.com/wgliang/logcool/utils"
+	"github.com/wgliang/logcool/utils/logevent"
 )
 
 const (

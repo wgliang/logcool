@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/Sirupsen/logrus"
 	"github.com/codegangsta/inject"
-	"logcool/utils/logevent"
+	"github.com/wgliang/logcool/utils/logevent"
 )
 
 // Output base type interface.

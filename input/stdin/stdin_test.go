@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"logcool/utils"
+	"github.com/wgliang/logcool/utils"
 )
 
 func Test_InitHandler(t *testing.T) {

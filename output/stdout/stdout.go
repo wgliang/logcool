@@ -5,8 +5,8 @@ package outputstdout
 import (
 	"fmt"
 
-	"logcool/utils"
-	"logcool/utils/logevent"
+	"github.com/wgliang/logcool/utils"
+	"github.com/wgliang/logcool/utils/logevent"
 )
 
 const (

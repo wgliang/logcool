@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"logcool/utils"
+	"github.com/wgliang/logcool/utils"
 )
 
 func Test_DefaultInputConfig(t *testing.T) {

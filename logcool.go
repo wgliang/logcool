@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"logcool/cmd"
-	"logcool/utils"
-	"logcool/utils/config"
+	"github.com/wgliang/logcool/cmd"
+	"github.com/wgliang/logcool/utils"
+	"github.com/wgliang/logcool/utils/config"
 	"os"
 	"os/signal"
 	"syscall"

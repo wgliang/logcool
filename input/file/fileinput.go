@@ -15,8 +15,8 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/fsnotify/fsnotify"
-	"logcool/utils"
-	"logcool/utils/logevent"
+	"github.com/wgliang/logcool/utils"
+	"github.com/wgliang/logcool/utils/logevent"
 )
 
 const (
