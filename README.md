@@ -6,11 +6,11 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/wgliang/logcool)](https://goreportcard.com/report/github.com/wgliang/logcool)
 
 
-Logcool is an open source project to collect, filter ,transfer and response any log or event-flow data as a lightweight system.
+Logcool is an open source project to collect, filter ,transfer and response any log or event-flow data as a lightweight system.[中文](./docs/README_ZH.md)
 
 ![Logcool](./logcool.jpg)
 
-Logcool's design learn from Heka and Logstash and it's implementation was inspired by gogstash. What's more, the logcool's goal is to be a completely independent project and not much rely on other non-standard libiaries.[中文](./docs/README_ZH.md)
+Logcool's design learn from Heka and Logstash and it's implementation was inspired by gogstash. What's more, the logcool's goal is to be a completely independent project and not much rely on other non-standard libiaries.
 
 Logcool is still in its infancy, then there will be a big change, especially in terms of code.So it is not recommended for commercial use now.
 

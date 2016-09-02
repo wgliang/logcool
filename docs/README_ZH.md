@@ -8,7 +8,7 @@
 
 Logcool是一个开源的集日志和事件流数据收集，过滤，传输及相应的轻量级日志采集系统。
 
-![Logcool](./logcool.jpg)
+![Logcool](../logcool.jpg)
 
 Logcool的设计灵感来自Heka和Logstash，它的实现受到了gogstash的启发。重要的是它的目标在于解决前面系统的一些弊端，例如系统庞大或者不能容易的在业务环境中部署，在这方面gogsyash实现的已经非常好了，不过我不看好的是依赖过多非标准库，在结构上也不够简单清晰。这是为什么我将gogstash重构并重新设计一些逻辑的原因。
 
@@ -20,7 +20,7 @@ Logcool 可以收集各类型的日志和事件数据，并且支持输入／输
 
 ## Using Example
 
-![Logcool](./logcool.gif)
+![Logcool](../logcool.gif)
 
 ## Other Contributor
 
