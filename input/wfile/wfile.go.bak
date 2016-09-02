@@ -1,7 +1,4 @@
-// Input-plug: fileinput
-// The plug's function is real-time monitoring of the specified file, once the data is
-//updated to record the data.
-package fileinput
+package wfileinput
 
 import (
 	"bufio"
@@ -19,36 +16,35 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/fsnotify/fsnotify"
 
-	"github.com/wgliang/logcool/utils"
-	"github.com/wgliang/logcool/utils/logevent"
+	"logcool/utils"
+	"logcool/utils/logevent"
 )
 
 const (
-	ModuleName = "file"
+	ModuleName = "wfile"
 )
-
-var (
-	mapWatcher = map[string]*fsnotify.Watcher{}
-)
-
-type SinceDBInfo struct {
-	Offset int64 `json:"offset"`
-}
 
 // Define fileinput' config.
 type InputConfig struct {
 	utils.InputConfig
-	DirsPath  []string `json:"dirspath"`
-	FileType  string   `json:"filetype"`
-	StartPos  string   `json:"startpos"`
-	SincePath string   `json:"sincepath"`
-	Intervals int      `json:"intervals"`
+	DirPath   string `json:"dirpath"`
+	StartPos  string `json:"startpos"`
+	SincePath string `json:"sincepath"`
+	Intervals int    `json:"intervals"`
 
 	hostname          string
 	SinceDBInfos      map[string]*SinceDBInfo
 	sinceLastInfos    []byte
 	SinceLastSaveTime time.Time
 }
+
+type SinceDBInfo struct {
+	Offset int64 `json:"offset"`
+}
+
+var (
+	mapWatcher = map[string]*fsnotify.Watcher{}
+)
 
 // Init fileinput Handler.
 func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err error) {
@@ -83,7 +79,7 @@ func (ic *InputConfig) LoadSinceData() (err error) {
 	var (
 		raw []byte
 	)
-	log.Debug("LoadSinceDBInfos")
+	log.Debug("LoadSinceData")
 	ic.SinceDBInfos = map[string]*SinceDBInfo{}
 
 	if ic.SincePath == "" || ic.SincePath == "/dev/null" {
@@ -152,7 +148,6 @@ func (ic *InputConfig) CheckSaveSinceDBInfos() (err error) {
 	return
 }
 
-// load check save since data
 func (ic *InputConfig) LoopCheckSaveSinceInfos() (err error) {
 	for {
 		time.Sleep(time.Duration(ic.Intervals) * time.Second)
@@ -162,32 +157,18 @@ func (ic *InputConfig) LoopCheckSaveSinceInfos() (err error) {
 	}
 }
 
-func (ic *InputConfig) monitor(logger *logrus.Logger, inchan utils.InChan) (err error) {
-	defer func() {
-		if err != nil {
-			logger.Errorln(err)
-		}
-	}()
-
+func (ic *InputConfig) monitor(logger *logrus.Logger, inchan utils.InChan) {
 	var (
-		matches = make([]string, 0)
-		fi      os.FileInfo
+		matches []string
+		fio     os.FileInfo
 	)
-
+	var err error
 	if err = ic.LoadSinceData(); err != nil {
-		return
+		logger.Errorln(err)
 	}
 	// load all files.
-	if len(ic.DirsPath) < 1 {
-		return
-	}
-	for _, dir := range ic.DirsPath {
-		var matche []string
-		matche, err = fileList(dir, ic.FileType)
-		if err != nil {
-			logger.Errorln(err)
-		}
-		matches = append(matches, matche...)
+	if matches, err = filepath.Glob(ic.DirPath); err != nil {
+		logger.Errorln(err)
 	}
 
 	go ic.LoopCheckSaveSinceInfos()
@@ -195,34 +176,31 @@ func (ic *InputConfig) monitor(logger *logrus.Logger, inchan utils.InChan) (err 
 	for _, fpath := range matches {
 		// get all sysmlinks.
 		if fpath, err = filepath.EvalSymlinks(fpath); err != nil {
-			logger.Errorf("Get symlinks failed: %q\n%v", fpath, err)
+			logger.Errorf("Can not get symlinks: %q\n%v", fpath, err)
 			continue
 		}
 		// check file status.
-		if fi, err = os.Stat(fpath); err != nil {
-			logger.Errorf("Stat(%q) failed\n%s", ic.DirsPath, err)
+		if fio, err = os.Stat(fpath); err != nil {
+			logger.Errorf("stat(%q) failed\n%s", ic.DirPath, err)
 			continue
 		}
 		// check file isDir?
-		if fi.IsDir() {
-			logger.Infof("Skipping directory: %q", ic.DirsPath)
+		if fio.IsDir() {
+			logger.Infof("Skipped dir: %q", ic.DirPath)
 			continue
 		}
 		// monitor file.
-		readEventChan := make(chan fsnotify.Event, 10)
-		go ic.loopRead(readEventChan, fpath, logger, inchan)
-		go ic.loopWatch(readEventChan, fpath, fsnotify.Create|fsnotify.Write)
+		eventChans := make(chan fsnotify.Event, 10)
+		go ic.loopRead(eventChans, fpath, logger, inchan)
+		go ic.loopWatch(eventChans, fpath, fsnotify.Create|fsnotify.Write)
 	}
 
 	return
 }
 
-func (ic *InputConfig) loopRead(
-	readEventChan chan fsnotify.Event,
-	fpath string,
-	logger *logrus.Logger,
-	inchan utils.InChan,
-) (err error) {
+func (ic *InputConfig) loopRead(eventChans chan fsnotify.Event, fpath string,
+	logger *logrus.Logger, inchan utils.InChan) {
+
 	var (
 		since     *SinceDBInfo
 		fp        *os.File
@@ -232,23 +210,20 @@ func (ic *InputConfig) loopRead(
 		reader    *bufio.Reader
 		line      string
 		size      int
+		err       error
 
 		buffer = &bytes.Buffer{}
 	)
-
-	if fpath, err = filepath.EvalSymlinks(fpath); err != nil {
-		logger.Errorf("Get symlinks failed: %q\n%v", fpath, err)
-		return
-	}
 	// if no path's since, add a null SinceDB.
 	if since, ok = ic.SinceDBInfos[fpath]; !ok {
 		ic.SinceDBInfos[fpath] = &SinceDBInfo{}
 		since = ic.SinceDBInfos[fpath]
 	}
+
 	// set or get offset index.
 	if since.Offset == 0 {
 		if ic.StartPos == "end" {
-			whence = os.SEEK_END // SEEK_END = 2
+			whence = os.SEEK_END // SEEK_SET = 2
 		} else {
 			whence = os.SEEK_SET // SEEK_SET = 0
 		}
@@ -257,15 +232,16 @@ func (ic *InputConfig) loopRead(
 	}
 	// open the file.
 	if fp, reader, err = openFile(fpath, since.Offset, whence); err != nil {
-		return
+		logger.Errorln(err)
 	}
 	defer fp.Close()
+
 	// seek beginning.
 	if truncated, err = isTruncated(fp, since); err != nil {
-		return
+		logger.Errorln(err)
 	}
 	if truncated {
-		logger.Warnf("File truncated, seeking to beginning: %q", fpath)
+		logger.Warnf("File truncated and seeking to beginning: %q", fpath)
 		since.Offset = 0
 		if _, err = fp.Seek(since.Offset, os.SEEK_SET); err != nil {
 			logger.Errorf("seek file failed: %q", fpath)
@@ -276,10 +252,10 @@ func (ic *InputConfig) loopRead(
 	for {
 		if line, size, err = readLine(reader, buffer); err != nil {
 			if err == io.EOF {
-				watchev := <-readEventChan
+				watchev := <-eventChans
 				logger.Debug("loopRead recv:", watchev)
 				if watchev.Op&fsnotify.Create == fsnotify.Create {
-					logger.Warnf("File recreated, seeking to beginning: %q", fpath)
+					logger.Warnf("File truncated and seeking to beginning: %q", fpath)
 					fp.Close()
 					since.Offset = 0
 					if fp, reader, err = openFile(fpath, since.Offset, os.SEEK_SET); err != nil {
@@ -290,7 +266,7 @@ func (ic *InputConfig) loopRead(
 					return
 				}
 				if truncated {
-					logger.Warnf("File truncated, seeking to beginning: %q", fpath)
+					logger.Warnf("File truncated and seeking to beginning: %q", fpath)
 					since.Offset = 0
 					if _, err = fp.Seek(since.Offset, os.SEEK_SET); err != nil {
 						logger.Errorf("seek file failed: %q", fpath)
@@ -323,33 +299,6 @@ func (ic *InputConfig) loopRead(
 	}
 }
 
-func (ic *InputConfig) loopWatch(readEventChan chan fsnotify.Event, fpath string, op fsnotify.Op) (err error) {
-	var (
-		event fsnotify.Event
-	)
-	for {
-		if event, err = waitWatchEvent(fpath, op); err != nil {
-			return
-		}
-		readEventChan <- event
-	}
-}
-
-func isTruncated(fp *os.File, since *SinceDBInfo) (truncated bool, err error) {
-	var (
-		fi os.FileInfo
-	)
-	if fi, err = fp.Stat(); err != nil {
-		return
-	}
-	if fi.Size() < since.Offset {
-		truncated = true
-	} else {
-		truncated = false
-	}
-	return
-}
-
 func openFile(fpath string, offset int64, whence int) (fp *os.File, reader *bufio.Reader, err error) {
 	if fp, err = os.Open(fpath); err != nil {
 		return
@@ -359,15 +308,27 @@ func openFile(fpath string, offset int64, whence int) (fp *os.File, reader *bufi
 		err = errors.New("seek file failed: " + fpath)
 		return
 	}
-
+	// buffer 16*1024
 	reader = bufio.NewReaderSize(fp, 16*1024)
 	return
 }
 
+func isTruncated(fp *os.File, since *SinceDBInfo) (truncated bool, err error) {
+	var fi os.FileInfo
+	if fi, err = fp.Stat(); err != nil {
+		return
+	}
+
+	if fi.Size() < since.Offset {
+		truncated = true
+	} else {
+		truncated = false
+	}
+	return
+}
+
 func readLine(reader *bufio.Reader, buffer *bytes.Buffer) (line string, size int, err error) {
-	var (
-		segment []byte
-	)
+	var segment []byte
 
 	for {
 		if segment, err = reader.ReadBytes('\n'); err != nil {
@@ -376,93 +337,72 @@ func readLine(reader *bufio.Reader, buffer *bytes.Buffer) (line string, size int
 			}
 			return
 		}
-
+		// write buffer.
 		if _, err = buffer.Write(segment); err != nil {
 			return
 		}
 
 		if len(segment) < 1 {
 			time.Sleep(1 * time.Second)
+		} else if segment[len(segment)-1] != '\n' {
+			time.Sleep(1 * time.Second)
 		} else {
-			if segment[len(segment)-1] != '\n' {
-				time.Sleep(1 * time.Second)
-			} else {
-				size = buffer.Len()
-				line = buffer.String()
-				buffer.Reset()
-				line = strings.TrimRight(line, "\r\n")
+			size = buffer.Len()
+			line = buffer.String()
+			buffer.Reset()
+			line = strings.TrimRight(line, "\r\n")
+			return
+		}
+	}
+}
+
+func (ic *InputConfig) loopWatch(readEventChan chan fsnotify.Event, fpath string, op fsnotify.Op) (err error) {
+	var event fsnotify.Event
+	for {
+		var (
+			fdir    string
+			watcher *fsnotify.Watcher
+			ok      bool
+		)
+
+		if fpath, err = filepath.EvalSymlinks(fpath); err != nil {
+			err = errors.New("Get symlinks failed: " + fpath)
+			return
+		}
+
+		fdir = filepath.Dir(fpath)
+
+		if watcher, ok = mapWatcher[fdir]; !ok {
+			//		logger.Debugf("create new watcher for %q", fdir)
+			if watcher, err = fsnotify.NewWatcher(); err != nil {
+				err = errors.New("create new watcher failed: " + fdir)
 				return
 			}
-
+			mapWatcher[fdir] = watcher
+			if err = watcher.Add(fdir); err != nil {
+				err = errors.New("add new watch path failed: " + fdir)
+				return
+			}
 		}
-	}
-}
 
-func waitWatchEvent(fpath string, op fsnotify.Op) (event fsnotify.Event, err error) {
-	var (
-		fdir    string
-		watcher *fsnotify.Watcher
-		ok      bool
-	)
-
-	if fpath, err = filepath.EvalSymlinks(fpath); err != nil {
-		err = errors.New("Get symlinks failed: " + fpath)
-		return
-	}
-
-	fdir = filepath.Dir(fpath)
-
-	if watcher, ok = mapWatcher[fdir]; !ok {
-		if watcher, err = fsnotify.NewWatcher(); err != nil {
-			err = errors.New("create new watcher failed: " + fdir)
-			return
-		}
-		mapWatcher[fdir] = watcher
-		if err = watcher.Add(fdir); err != nil {
-			err = errors.New("add new watch path failed: " + fdir)
-			return
-		}
-	}
-
-	for {
-		select {
-		case event = <-watcher.Events:
-			if event.Name == fpath {
-				if op > 0 {
-					if event.Op&op > 0 {
+		for {
+			select {
+			case event = <-watcher.Events:
+				if event.Name == fpath {
+					if op > 0 {
+						if event.Op&op > 0 {
+							return
+						}
+					} else {
 						return
 					}
-				} else {
-					return
 				}
+			case err = <-watcher.Errors:
+				err = errors.New("watcher error")
+				return
 			}
-		case err = <-watcher.Errors:
-			err = errors.New("watcher error")
-			return
 		}
+
+		readEventChan <- event
 	}
-}
-
-// list all config templates.
-func fileList(dirPath string, suffix string) (files []string, err error) {
-	files = make([]string, 0, 10)
-
-	dir, err := ioutil.ReadDir(dirPath)
-	if err != nil {
-		return nil, err
-	}
-
-	PthSep := string(os.PathSeparator)
-	suffix = strings.ToUpper(suffix)
-
-	for _, fi := range dir {
-		if fi.IsDir() {
-			continue
-		}
-		if strings.HasSuffix(strings.ToUpper(fi.Name()), suffix) {
-			files = append(files, dirPath+PthSep+fi.Name())
-		}
-	}
-
-	return files, nil
 }

@@ -1,7 +1,7 @@
 // Input-plug: fileinput
 // The plug's function is real-time monitoring of the specified file, once the data is
 //updated to record the data.
-package fileinput
+package wfileinput
 
 import (
 	"bufio"
@@ -19,12 +19,12 @@ import (
 	log "github.com/Sirupsen/logrus"
 	"github.com/fsnotify/fsnotify"
 
-	"github.com/wgliang/logcool/utils"
-	"github.com/wgliang/logcool/utils/logevent"
+	"logcool/utils"
+	"logcool/utils/logevent"
 )
 
 const (
-	ModuleName = "file"
+	ModuleName = "wfile"
 )
 
 var (
@@ -38,7 +38,7 @@ type SinceDBInfo struct {
 // Define fileinput' config.
 type InputConfig struct {
 	utils.InputConfig
-	DirsPath  []string `json:"dirspath"`
+	DirPath   []string `json:"dirpath"`
 	FileType  string   `json:"filetype"`
 	StartPos  string   `json:"startpos"`
 	SincePath string   `json:"sincepath"`
@@ -178,10 +178,10 @@ func (ic *InputConfig) monitor(logger *logrus.Logger, inchan utils.InChan) (err 
 		return
 	}
 	// load all files.
-	if len(ic.DirsPath) < 1 {
+	if len(ic.DirPath) < 1 {
 		return
 	}
-	for _, dir := range ic.DirsPath {
+	for _, dir := range ic.DirPath {
 		var matche []string
 		matche, err = fileList(dir, ic.FileType)
 		if err != nil {
@@ -200,12 +200,12 @@ func (ic *InputConfig) monitor(logger *logrus.Logger, inchan utils.InChan) (err 
 		}
 		// check file status.
 		if fi, err = os.Stat(fpath); err != nil {
-			logger.Errorf("Stat(%q) failed\n%s", ic.DirsPath, err)
+			logger.Errorf("Stat(%q) failed\n%s", ic.DirPath, err)
 			continue
 		}
 		// check file isDir?
 		if fi.IsDir() {
-			logger.Infof("Skipping directory: %q", ic.DirsPath)
+			logger.Infof("Skipping directory: %q", ic.DirPath)
 			continue
 		}
 		// monitor file.

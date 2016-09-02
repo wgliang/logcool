@@ -2,9 +2,11 @@
     "input": [
         {
             "type": "file",
-            "path": "./tmp/log/log.log",
-            "since_path": "",
-            "start_position": "beginning"
+            "dirspath": ["./tmp/log","./tmp/event"],
+            "filetype": ".log",
+            "sincepath": "./tmp/since/.sincedb",
+            "startpos": "beginning",
+            "intervals":5
         }
     ],
     "filter": [

@@ -3,12 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/wgliang/logcool/cmd"
-	"github.com/wgliang/logcool/utils"
-	"github.com/wgliang/logcool/utils/config"
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/wgliang/logcool/cmd"
+	"github.com/wgliang/logcool/utils"
+	"github.com/wgliang/logcool/utils/config"
 )
 
 var (

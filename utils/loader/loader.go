@@ -4,6 +4,7 @@ import (
 	"github.com/wgliang/logcool/filter/zeus"
 	"github.com/wgliang/logcool/input/file"
 	"github.com/wgliang/logcool/input/stdin"
+	"github.com/wgliang/logcool/input/wfile"
 	"github.com/wgliang/logcool/output/redis"
 	"github.com/wgliang/logcool/output/stdout"
 	"github.com/wgliang/logcool/utils"
@@ -12,6 +13,7 @@ import (
 func init() {
 	utils.RegistInputHandler(fileinput.ModuleName, fileinput.InitHandler)
 	utils.RegistInputHandler(stdininput.ModuleName, stdininput.InitHandler)
+	utils.RegistInputHandler(wfileinput.ModuleName, wfileinput.InitHandler)
 
 	utils.RegistFilterHandler(zeus.ModuleName, zeus.InitHandler)
 
