@@ -21,6 +21,10 @@ Logcool is still in its infancy, then there will be a big change, especially in 
 
 Logcool can collect all-types los or event-flow data, and support some input/output types.Besides,you can  new your's plugs if you need it. To get started, [check out the installation instructions in the documentation](https://godoc.org/github.com/wgliang/logcool).
 
+## Using Example
+
+![Logcool](./logcool.gif)
+
 ## Other Contributor
 
 Logcool learn from gogstash much. Thank you for your contribution, and I also learn a lot from your project. @tsaikd
