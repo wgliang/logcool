@@ -11,7 +11,7 @@ func Test_RegistOutputHandler(t *testing.T) {
 	RegistOutputHandler("stdout", outputstdout.InitHandler)
 }
 
-func Test_RunFilters(t *testing.T) {
+func Test_RunOutputs(t *testing.T) {
 	config, err := LoadFromString(`
 	{
 		"input": [{
