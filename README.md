@@ -10,8 +10,7 @@ Logcool is an open source project to collect, filter ,transfer and response any 
 
 ![Logcool](./logcool.jpg)
 
-Logcool's design learn from Heka and Logstash and it's implementation was inspired by gogstash. What's more, 
-the logcool's goal is to be a completely independent project and not much rely on other non-standard libiaries.
+Logcool's design learn from Heka and Logstash and it's implementation was inspired by gogstash. What's more, the logcool's goal is to be a completely independent project and not much rely on other non-standard libiaries.[中文](./docs/README_ZH.md)
 
 Logcool is still in its infancy, then there will be a big change, especially in terms of code.So it is not recommended for commercial use now.
 
