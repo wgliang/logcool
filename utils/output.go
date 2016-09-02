@@ -2,8 +2,10 @@ package utils
 
 import (
 	"errors"
+
 	"github.com/Sirupsen/logrus"
 	"github.com/codegangsta/inject"
+
 	"github.com/wgliang/logcool/utils/logevent"
 )
 
@@ -31,14 +33,14 @@ func RegistOutputHandler(name string, handler OutputHandler) {
 }
 
 // Run Outputs.
-func (t *Config) RunOutputs() (err error) {
-	_, err = t.Injector.Invoke(t.runOutputs)
+func (c *Config) RunOutputs() (err error) {
+	_, err = c.Injector.Invoke(c.runOutputs)
 	return
 }
 
 // run Outputs.
-func (t *Config) runOutputs(outchan OutChan, logger *logrus.Logger) (err error) {
-	outputs, err := t.getOutputs()
+func (c *Config) runOutputs(outchan OutChan, logger *logrus.Logger) (err error) {
+	outputs, err := c.getOutputs()
 	if err != nil {
 		return
 	}
@@ -60,8 +62,8 @@ func (t *Config) runOutputs(outchan OutChan, logger *logrus.Logger) (err error) 
 }
 
 // get Outputs.
-func (t *Config) getOutputs() (outputs []TypeOutputConfig, err error) {
-	for _, confraw := range t.OutputRaw {
+func (c *Config) getOutputs() (outputs []TypeOutputConfig, err error) {
+	for _, confraw := range c.OutputRaw {
 		handler, ok := mapOutputHandler[confraw["type"].(string)]
 		if !ok {
 			err = errors.New(confraw["type"].(string))
@@ -69,7 +71,7 @@ func (t *Config) getOutputs() (outputs []TypeOutputConfig, err error) {
 		}
 
 		inj := inject.New()
-		inj.SetParent(t)
+		inj.SetParent(c)
 		inj.Map(&confraw)
 
 		refvs, err := inj.Invoke(handler)

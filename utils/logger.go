@@ -1,16 +1,19 @@
 package utils
 
 import (
-	"github.com/tsaikd/KDGoLib/errutil"
-	"github.com/tsaikd/KDGoLib/logutil"
+	"os"
+
+	"github.com/Sirupsen/logrus"
 )
 
 var (
-	// Logger app logger
-	Logger = logutil.DefaultLogger
+	timestampFormat = "2006/01/0 10:10:10"
+	Logger          = &logrus.Logger{
+		Out: os.Stdout,
+		Formatter: &logrus.TextFormatter{
+			TimestampFormat: timestampFormat,
+		},
+		Hooks: make(logrus.LevelHooks),
+		Level: logrus.InfoLevel,
+	}
 )
-
-func init() {
-	formatter := errutil.NewConsoleFormatter("; ")
-	errutil.SetDefaultFormatter(formatter)
-}

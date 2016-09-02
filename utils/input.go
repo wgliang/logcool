@@ -2,6 +2,7 @@ package utils
 
 import (
 	"errors"
+
 	"github.com/codegangsta/inject"
 )
 
@@ -29,14 +30,14 @@ func RegistInputHandler(name string, handler InputHandler) {
 }
 
 // Run Inputs.
-func (t *Config) RunInputs() (err error) {
-	_, err = t.Injector.Invoke(t.runInputs)
+func (c *Config) RunInputs() (err error) {
+	_, err = c.Injector.Invoke(c.runInputs)
 	return
 }
 
 // run Inputs.
-func (t *Config) runInputs(inchan InChan) (err error) {
-	inputs, err := t.getInputs(inchan)
+func (c *Config) runInputs(inchan InChan) (err error) {
+	inputs, err := c.getInputs(inchan)
 	if err != nil {
 		return
 	}
@@ -48,8 +49,8 @@ func (t *Config) runInputs(inchan InChan) (err error) {
 }
 
 // get Inputs.
-func (t *Config) getInputs(inchan InChan) (inputs []TypeInputConfig, err error) {
-	for _, confraw := range t.InputRaw {
+func (c *Config) getInputs(inchan InChan) (inputs []TypeInputConfig, err error) {
+	for _, confraw := range c.InputRaw {
 		handler, ok := mapInputHandler[confraw["type"].(string)]
 		if !ok {
 			err = errors.New(confraw["type"].(string))
@@ -57,7 +58,7 @@ func (t *Config) getInputs(inchan InChan) (inputs []TypeInputConfig, err error) 
 		}
 
 		inj := inject.New()
-		inj.SetParent(t)
+		inj.SetParent(c)
 		inj.Map(&confraw)
 		inj.Map(inchan)
 

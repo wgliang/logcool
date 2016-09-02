@@ -2,8 +2,9 @@ package utils
 
 import (
 	"fmt"
-	"github.com/codegangsta/inject"
 	"testing"
+
+	"github.com/codegangsta/inject"
 )
 
 func Test_SetInjector(t *testing.T) {
@@ -23,16 +24,14 @@ func Test_GetType(t *testing.T) {
 }
 
 func Test_Invoke(t *testing.T) {
-	// comc := CommonConfig{
-	// 	Type: "test",
-	// }
+	conf, _ := LoadFromString(Defaultconfig)
+	fmt.Println(conf)
 	// inj := inject.New()
-	// // in := NewFtest()
-	// comc.Invoke(inj)
+	// conf.Invoke(inj)
 }
 
 func Test_LoadFromFile(t *testing.T) {
-	LoadFromFile("../test.json")
+	LoadFromFile("../templates/stdin2stdout.json")
 }
 
 func Test_LoadFromString(t *testing.T) {
@@ -40,7 +39,7 @@ func Test_LoadFromString(t *testing.T) {
 	{
 		"input": [{
 			"type": "file",
-			"path": "/tmp/log/syslog",
+			"path": "./tmp/log/log.log",
 			"sincedb_path": "",
 			"start_position": "beginning"
 		}]
@@ -53,7 +52,7 @@ func Test_LoadFromData(t *testing.T) {
 	{
 		"input": [{
 			"type": "file",
-			"path": "/tmp/log/syslog",
+			"path": "./tmp/log/log.log",
 			"sincedb_path": "",
 			"start_position": "beginning"
 		}]
@@ -62,7 +61,7 @@ func Test_LoadFromData(t *testing.T) {
 }
 
 func Test_ReflectConfig(t *testing.T) {
-
+	// todo
 }
 
 func Test_CleanComments(t *testing.T) {
@@ -83,5 +82,5 @@ func Test_CleanComments(t *testing.T) {
 }
 
 func Test_InvokeSimple(t *testing.T) {
-
+	// todo
 }

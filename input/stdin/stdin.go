@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/Sirupsen/logrus"
+
 	"github.com/wgliang/logcool/utils"
 	"github.com/wgliang/logcool/utils/logevent"
 )

@@ -2,12 +2,17 @@ package outputredis
 
 import (
 	"fmt"
+	// "reflect"
 	"testing"
-	"time"
+	// "time"
 
 	"github.com/wgliang/logcool/utils"
-	"github.com/wgliang/logcool/utils/logevent"
+	// "github.com/wgliang/logcool/utils/logevent"
 )
+
+func init() {
+	utils.RegistOutputHandler(ModuleName, InitHandler)
+}
 
 func Test_InitHandler(t *testing.T) {
 	conf, err := utils.LoadFromString(`{
@@ -29,28 +34,28 @@ func Test_InitHandler(t *testing.T) {
 }
 
 func Test_Event(t *testing.T) {
-	conf := OutputConfig{
-		OutputConfig: utils.OutputConfig{
-			CommonConfig: utils.CommonConfig{
-				Type: ModuleName,
-			},
-		},
-		Key:               "logcool",
-		DataType:          "list",
-		Timeout:           5,
-		ReconnectInterval: 1,
+	conf, err := utils.LoadFromString(`{
+		"output": [{
+			"type": "redis",
+	           "key": "logcool",
+	           "host": "127.0.0.1:6379",
+	           "password":"",
+	           "data_type": "list",
+	           "timeout": 5,
+	           "reconnect_interval": 1
+		}]
+	}`)
 
-		evchan: make(chan logevent.LogEvent),
-	}
-	var confraw *utils.ConfigRaw
-	if err := utils.ReflectConfig(confraw, &conf); err != nil {
+	err = conf.RunOutputs()
+	if err != nil {
 		fmt.Println(err)
-		return
 	}
-	InitHandler(confraw)
-	ev := logevent.LogEvent{
-		Timestamp: time.Now(),
-		Message:   "outputredis test message",
-	}
-	conf.Event(ev)
+
+	// evchan := conf.Get(reflect.TypeOf(make(chan logevent.LogEvent))).
+	// 	Interface().(chan logevent.LogEvent)
+
+	// evchan <- logevent.LogEvent{
+	// 	Timestamp: time.Now(),
+	// 	Message:   "outputstdout test message",
+	// }
 }

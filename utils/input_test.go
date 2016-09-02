@@ -3,10 +3,12 @@ package utils
 import (
 	"fmt"
 	"testing"
+
+	"github.com/wgliang/logcool/input/stdin"
 )
 
 func Test_RegistInputHandler(t *testing.T) {
-	// RegistInputHandler("test")
+	RegistInputHandler("stdin", stdininput.InitHandler)
 }
 
 func Test_RunInputs(t *testing.T) {
@@ -14,12 +16,13 @@ func Test_RunInputs(t *testing.T) {
 	{
 		"input": [{
 			"type": "file",
-			"path": "/tmp/log/syslog",
+			"path": "./tmp/log/log.log",
 			"sincedb_path": "",
 			"start_position": "beginning"
 		}]
 	}
 	`)
+	RegistInputHandler("stdin", stdininput.InitHandler)
 	if err != nil {
 		fmt.Println(err)
 	}

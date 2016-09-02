@@ -1,39 +1,43 @@
 package outputstdout
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 	"time"
 
-	"../../utils"
-	"../../utils/logevent"
-	"github.com/Sirupsen/logrus"
-	"github.com/stretchr/testify/require"
-)
-
-var (
-	logger = utils.Logger
+	"github.com/wgliang/logcool/utils"
+	"github.com/wgliang/logcool/utils/logevent"
 )
 
 func init() {
-	logger.Level = logrus.DebugLevel
 	utils.RegistOutputHandler(ModuleName, InitHandler)
 }
 
-func Test_main(t *testing.T) {
-	require := require.New(t)
-	require.NotNil(require)
+func Test_InitHandler(t *testing.T) {
+	conf, err := utils.LoadFromString(`{
+		"output": [{
+	           "type": "stdout"
+	       }]
+	}`)
+	var confraw *utils.ConfigRaw
+	if err = utils.ReflectConfig(confraw, &conf); err != nil {
+		return
+	}
+	InitHandler(confraw)
+}
 
+func Test_Event(t *testing.T) {
 	conf, err := utils.LoadFromString(`{
 		"output": [{
 			"type": "stdout"
 		}]
 	}`)
-	require.NoError(err)
 
 	err = conf.RunOutputs()
-	require.NoError(err)
-
+	if err != nil {
+		fmt.Println(err)
+	}
 	outchan := conf.Get(reflect.TypeOf(make(utils.OutChan))).
 		Interface().(utils.OutChan)
 	outchan <- logevent.LogEvent{
@@ -41,26 +45,5 @@ func Test_main(t *testing.T) {
 		Message:   "outputstdout test message",
 	}
 
-	waitsec := 1
-	logger.Infof("Wait for %d seconds", waitsec)
-	time.Sleep(time.Duration(waitsec) * time.Second)
-}
-
-func Test_DefaultOutputConfig(t *testing.T) {
-	DefaultOutputConfig()
-}
-
-func Test_InitHandler(t *testing.T) {
-	// InitHandler()
-}
-
-func Test_Event(t *testing.T) {
-	le := logevent.LogEvent{
-		Timestamp: time.Now(),
-		Message:   "message",
-		Tags:      []string{"frg", "grbhrt"},
-		Extra:     make(map[string]interface{}),
-	}
-	config := DefaultOutputConfig()
-	config.Event(le)
+	time.Sleep(time.Duration(5) * time.Second)
 }

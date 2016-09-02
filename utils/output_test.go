@@ -3,10 +3,12 @@ package utils
 import (
 	"fmt"
 	"testing"
+
+	"github.com/wgliang/logcool/output/stdout"
 )
 
 func Test_RegistOutputHandler(t *testing.T) {
-	// RegistInputHandler("test")
+	RegistOutputHandler("stdout", outputstdout.InitHandler)
 }
 
 func Test_RunFilters(t *testing.T) {
@@ -14,12 +16,13 @@ func Test_RunFilters(t *testing.T) {
 	{
 		"input": [{
 			"type": "file",
-			"path": "/tmp/log/syslog",
+			"path": "/tmp/log/log.log",
 			"sincedb_path": "",
 			"start_position": "beginning"
 		}]
 	}
 	`)
+	RegistOutputHandler("stdout", outputstdout.InitHandler)
 	if err != nil {
 		fmt.Println(err)
 	}

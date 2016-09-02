@@ -1,4 +1,4 @@
-package stdininput
+package fileinput
 
 import (
 	"fmt"
@@ -24,9 +24,15 @@ func Test_InitHandler(t *testing.T) {
 func Test_Start(t *testing.T) {
 	conf, err := utils.LoadFromString(`{
 		"input": [{
-			"type": "stdin"
+			"type": "file",
+			"path": "../../tmp/log/log.log",
+			"sincedb_path": "",
+			"start_position": "beginning"
 		}]
 	}`)
+	if err != nil {
+		fmt.Println(err)
+	}
 	err = conf.RunInputs()
 	if err != nil {
 		fmt.Println(err)

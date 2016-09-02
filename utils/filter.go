@@ -2,7 +2,9 @@ package utils
 
 import (
 	"errors"
+
 	"github.com/codegangsta/inject"
+
 	"github.com/wgliang/logcool/utils/logevent"
 )
 

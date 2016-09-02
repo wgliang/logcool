@@ -1,26 +1,55 @@
 package zeus
 
 import (
-	"../../utils/logevent"
+	"fmt"
+	"reflect"
 	"testing"
 	"time"
+
+	"github.com/wgliang/logcool/utils"
+	"github.com/wgliang/logcool/utils/logevent"
 )
 
-func Test_DefaultFilterConfig(t *testing.T) {
-	DefaultFilterConfig()
+func init() {
+	utils.RegistFilterHandler(ModuleName, InitHandler)
 }
 
 func Test_InitHandler(t *testing.T) {
-	// InitHandler(&make(map[string]interface{}))
+	config := utils.ConfigRaw{}
+	co, err := InitHandler(&config)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(co)
 }
 
 func Test_Event(t *testing.T) {
-	le := logevent.LogEvent{
-		Timestamp: time.Now(),
-		Message:   "message",
-		Tags:      []string{"frg", "grbhrt"},
-		Extra:     make(map[string]interface{}),
+	conf, err := utils.LoadFromString(`{
+		"filter": [{
+			"type": "zeus",
+			"key": "foo",
+			"value": "bar"
+		}]
+	}`)
+	if err != nil {
+		fmt.Println(err)
 	}
-	config := DefaultFilterConfig()
-	config.Event(le)
+
+	timestamp := time.Now()
+
+	inchan := conf.Get(reflect.TypeOf(make(utils.InChan))).
+		Interface().(utils.InChan)
+
+	outchan := conf.Get(reflect.TypeOf(make(utils.OutChan))).
+		Interface().(utils.OutChan)
+
+	err = conf.RunFilters()
+
+	inchan <- logevent.LogEvent{
+		Timestamp: timestamp,
+		Message:   "filter test message",
+	}
+
+	event := <-outchan
+	fmt.Println(event)
 }

@@ -1,18 +1,21 @@
+// sincedb store point of read file current.
 package fileinput
 
 import (
 	"bytes"
 	"encoding/json"
-	log "github.com/Sirupsen/logrus"
 	"io/ioutil"
 	"os"
 	"time"
+
+	log "github.com/Sirupsen/logrus"
 )
 
 type SinceDBInfo struct {
 	Offset int64 `json:"offset"`
 }
 
+// load current since data.
 func (self *InputConfig) LoadSinceData() (err error) {
 	var (
 		raw []byte
@@ -42,6 +45,7 @@ func (self *InputConfig) LoadSinceData() (err error) {
 	return
 }
 
+// save since data info.
 func (self *InputConfig) SaveSinceDBInfos() (err error) {
 	var (
 		raw []byte
@@ -68,6 +72,7 @@ func (self *InputConfig) SaveSinceDBInfos() (err error) {
 	return
 }
 
+// check since data info.
 func (self *InputConfig) CheckSaveSinceDBInfos() (err error) {
 	var (
 		raw []byte

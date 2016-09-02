@@ -9,10 +9,11 @@ import (
 
 	"github.com/codegangsta/inject"
 	"github.com/golang/glog"
+
 	"github.com/wgliang/logcool/utils/logevent"
 )
 
-const defaultconfig = `
+const Defaultconfig = `
 {
     "input": [
         {
@@ -53,9 +54,9 @@ type ConfigRaw map[string]interface{}
 // config struct for config-raw.
 type Config struct {
 	inject.Injector `json:"-"`
-	InputRaw        []ConfigRaw `json:"input,omitempty"`
-	FilterRaw       []ConfigRaw `json:"filter,omitempty"`
-	OutputRaw       []ConfigRaw `json:"output,omitempty"`
+	InputRaw        []ConfigRaw `json:"input"`
+	FilterRaw       []ConfigRaw `json:"filter"`
+	OutputRaw       []ConfigRaw `json:"output"`
 }
 
 // In/Out chan.
@@ -63,13 +64,13 @@ type InChan chan logevent.LogEvent
 type OutChan chan logevent.LogEvent
 
 // Set injector value.
-func (t *CommonConfig) SetInjector(inj inject.Injector) {
-	t.Injector = inj
+func (c *CommonConfig) SetInjector(inj inject.Injector) {
+	c.Injector = inj
 }
 
 // Get config type.
-func (t *CommonConfig) GetType() string {
-	return t.Type
+func (c *CommonConfig) GetType() string {
+	return c.Type
 }
 
 func CheckErrorValues(refvs []reflect.Value) (err error) {
@@ -86,9 +87,9 @@ func CheckErrorValues(refvs []reflect.Value) (err error) {
 }
 
 // Invoke all reflect-values.
-func (t *CommonConfig) Invoke(f interface{}) (refvs []reflect.Value, err error) {
-	// return inject.Invoker(t.Injector, f)
-	if refvs, err = t.Injector.Invoke(f); err != nil {
+func (c *CommonConfig) Invoke(f interface{}) (refvs []reflect.Value, err error) {
+	// return inject.Invoker(c.Injector, f)
+	if refvs, err = c.Injector.Invoke(f); err != nil {
 		return
 	}
 	err = CheckErrorValues(refvs)
@@ -112,7 +113,7 @@ func LoadFromString(text string) (config Config, err error) {
 
 // Laod default-config from string.
 func LoadDefaultConfig() (config Config, err error) {
-	return LoadFromString(defaultconfig)
+	return LoadFromString(Defaultconfig)
 }
 
 // Load config from data([]byte).
@@ -184,9 +185,7 @@ func formatReflect(rv reflect.Value) {
 }
 
 // CleanComments used for remove non-standard json comments.
-// Supported comment formats
-// format 1: ^\s*#
-// format 2: ^\s*//
+// Supported comment formats ^\s*# and ^\s*//
 func CleanComments(data []byte) (out []byte, err error) {
 	reForm1 := regexp.MustCompile(`^\s*#`)
 	reForm2 := regexp.MustCompile(`^\s*//`)
@@ -209,8 +208,8 @@ func CleanComments(data []byte) (out []byte, err error) {
 }
 
 // Simple-invoke.
-func (t *Config) InvokeSimple(arg interface{}) (err error) {
-	refvs, err := t.Injector.Invoke(arg)
+func (c *Config) InvokeSimple(arg interface{}) (err error) {
+	refvs, err := c.Injector.Invoke(arg)
 	if err != nil {
 		return
 	}
