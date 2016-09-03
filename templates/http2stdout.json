@@ -1,0 +1,23 @@
+{
+    "input": [
+        {
+            "type": "http",
+            "addr": "127.0.0.1:6789",
+            "urls": "/logcool",
+            "method": ["HEAD","GET","POST"],
+            "intervals":5
+        }
+    ],
+    "filter": [
+        {
+            "type": "zeus",
+            "key": "foo",
+            "value": "bar"
+        }
+    ],
+    "output": [
+        {
+            "type": "stdout"
+        }
+    ]
+}
