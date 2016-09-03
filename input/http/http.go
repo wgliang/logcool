@@ -1,11 +1,9 @@
 package httpinput
 
 import (
-	"errors"
 	"io/ioutil"
 	"net/http"
 	"os"
-	"strings"
 	"time"
 
 	"github.com/Sirupsen/logrus"
@@ -19,7 +17,7 @@ const (
 )
 
 type InputConfig struct {
-	config.InputConfig
+	utils.InputConfig
 	Addr      string   `json:"addr"`
 	Method    []string `json:"method"`
 	Urls      string   `json:"urls"`
@@ -29,17 +27,17 @@ type InputConfig struct {
 	httpChan chan logevent.LogEvent
 }
 
-func InitHandler(confraw *config.ConfigRaw) (retconf config.TypeInputConfig, err error) {
+func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err error) {
 	conf := InputConfig{
-		InputConfig: config.InputConfig{
-			CommonConfig: config.CommonConfig{
+		InputConfig: utils.InputConfig{
+			CommonConfig: utils.CommonConfig{
 				Type: ModuleName,
 			},
 		},
-		Method:   "GET",
+		Method:   []string{"GET"},
 		Interval: 60,
 	}
-	if err = config.ReflectConfig(confraw, &conf); err != nil {
+	if err = utils.ReflectConfig(confraw, &conf); err != nil {
 		return
 	}
 
@@ -56,7 +54,7 @@ func (t *InputConfig) Start() {
 	t.Invoke(t.listen)
 }
 
-func (ic *InputConfig) listen(logger *logrus.Logger, inchan config.InChan) {
+func (ic *InputConfig) listen(logger *logrus.Logger, inchan utils.InChan) {
 	http.HandleFunc("/logcool", ic.Handler)
 	//http server.
 	http.ListenAndServe(ic.Addr, nil)
