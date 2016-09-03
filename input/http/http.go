@@ -1,6 +1,7 @@
 package httpinput
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -34,8 +35,8 @@ func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err e
 				Type: ModuleName,
 			},
 		},
-		Method:   []string{"GET"},
-		Interval: 60,
+		Method:    []string{"GET"},
+		Intervals: 10,
 	}
 	if err = utils.ReflectConfig(confraw, &conf); err != nil {
 		return
@@ -49,15 +50,22 @@ func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err e
 	return
 }
 
-func (t *InputConfig) Start() {
+func (ic *InputConfig) Start() {
 	fmt.Println("start http....")
-	t.Invoke(t.listen)
+	ic.Invoke(ic.listen)
 }
 
 func (ic *InputConfig) listen(logger *logrus.Logger, inchan utils.InChan) {
-	http.HandleFunc("/logcool", ic.Handler)
+	var mux = http.NewServeMux()
+	mux.HandleFunc(ic.Urls, ic.Handler)
+	fmt.Println(ic.Addr)
 	//http server.
-	http.ListenAndServe(ic.Addr, nil)
+	go func(serverAddr string, m *http.ServeMux) {
+		if err := http.ListenAndServe(serverAddr, m); err != nil {
+			fmt.Println(err)
+		}
+	}(ic.Addr, mux)
+
 	fmt.Println(`Now Serving...`)
 
 	for {
@@ -65,33 +73,34 @@ func (ic *InputConfig) listen(logger *logrus.Logger, inchan utils.InChan) {
 		case event := <-ic.httpChan:
 			inchan <- event
 		}
+		time.Sleep(time.Second)
 	}
 }
 
 // Handler 处理请求
 func (ic *InputConfig) Handler(w http.ResponseWriter, r *http.Request) {
-	var (
-		message string
-		ok      bool
-	)
+	var message string
 
 	if r.Method == "GET" {
-		message, ok := r.Form["data"]
-		if ok == false {
-			message = "error"
-		}
-
+		// if _, ok := r.Form["data"]; ok {
+		// 	if len(r.Form["data"]) > 0 {
+		// 		message = r.Form["data"][0]
+		// 	}
+		// }
+		message = "logcool"
 	} else if r.Method == "POST" {
 		result, _ := ioutil.ReadAll(r.Body)
 		r.Body.Close()
-		message = result
+		message = string(result)
 	}
 	event := logevent.LogEvent{
 		Timestamp: time.Now(),
 		Message:   message,
 		Extra: map[string]interface{}{
-			"host": t.hostname,
+			"host": ic.hostname,
 		},
 	}
+	ic.httpChan <- event
+	w.Write([]byte(message))
 	return
 }
