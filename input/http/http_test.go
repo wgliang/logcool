@@ -53,6 +53,6 @@ func Test_Start(t *testing.T) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	go httpGet("http://127.0.0.1:6789/logcool?data=logcool")
-	time.Sleep(time.Duration(3) * time.Second)
+	time.Sleep(time.Duration(1) * time.Second)
+	httpGet("http://127.0.0.1:6789/logcool?data=logcool")
 }
