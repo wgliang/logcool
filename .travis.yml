@@ -12,7 +12,8 @@ go:
 script:
   - go vet ./...
   - go test -v ./cmd/... ./filter/... ./input/... ./output/...
-  - go build 
-  
+  - go build
+  - go install
+
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - go clean
