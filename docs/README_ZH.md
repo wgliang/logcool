@@ -6,7 +6,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/wgliang/logcool)](https://goreportcard.com/report/github.com/wgliang/logcool)
 
 
-Logcool是一个开源的集日志和事件流数据收集，过滤，传输及相应的轻量级日志采集系统。
+Logcool是一个开源的集日志和事件流数据收集，过滤，传输及响应的轻量级数据采集系统。
 
 ![Logcool](../logcool.jpg)
 
