@@ -1,13 +1,14 @@
 package httpinput
 
 import (
-	"fmt"
-	"io/ioutil"
+	"encoding/json"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/Sirupsen/logrus"
+	"github.com/golang/glog"
 
 	"github.com/wgliang/logcool/utils"
 	"github.com/wgliang/logcool/utils/logevent"
@@ -29,6 +30,7 @@ type InputConfig struct {
 }
 
 func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err error) {
+	glog.Infoln(ModuleName + " input-plug Init...")
 	conf := InputConfig{
 		InputConfig: utils.InputConfig{
 			CommonConfig: utils.CommonConfig{
@@ -39,60 +41,64 @@ func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err e
 		Intervals: 10,
 	}
 	if err = utils.ReflectConfig(confraw, &conf); err != nil {
+		glog.Errorln(err)
 		return
 	}
 
 	if conf.hostname, err = os.Hostname(); err != nil {
+		glog.Errorln(err)
 		return
 	}
-	fmt.Println("=============")
+	conf.httpChan = make(chan logevent.LogEvent, 10)
 	retconf = &conf
 	return
 }
 
 func (ic *InputConfig) Start() {
-	fmt.Println("start http....")
+	glog.Infoln(ModuleName + " input-plug Starting...")
 	ic.Invoke(ic.listen)
 }
 
 func (ic *InputConfig) listen(logger *logrus.Logger, inchan utils.InChan) {
 	var mux = http.NewServeMux()
 	mux.HandleFunc(ic.Urls, ic.Handler)
-	fmt.Println(ic.Addr)
 	//http server.
 	go func(serverAddr string, m *http.ServeMux) {
 		if err := http.ListenAndServe(serverAddr, m); err != nil {
-			fmt.Println(err)
+			glog.Errorln(err)
 		}
 	}(ic.Addr, mux)
-
-	fmt.Println(`Now Serving...`)
 
 	for {
 		select {
 		case event := <-ic.httpChan:
 			inchan <- event
 		}
-		time.Sleep(time.Second)
 	}
 }
 
-// Handler 处理请求
+// Handler
 func (ic *InputConfig) Handler(w http.ResponseWriter, r *http.Request) {
-	var message string
-
-	if r.Method == "GET" {
-		// if _, ok := r.Form["data"]; ok {
-		// 	if len(r.Form["data"]) > 0 {
-		// 		message = r.Form["data"][0]
-		// 	}
-		// }
-		message = "logcool"
-	} else if r.Method == "POST" {
-		result, _ := ioutil.ReadAll(r.Body)
-		r.Body.Close()
-		message = string(result)
+	var (
+		message string
+		err     error
+	)
+	r.ParseForm()
+	// if r.Method == "GET" {
+	for k, v := range r.Form {
+		var res []byte
+		res, err = json.Marshal(struct {
+			Key   string `json:"key"`
+			Value string `json:"value"`
+		}{k, strings.Join(v, "")})
+		if err != nil {
+			glog.Errorln(err)
+		}
+		message = string(res)
+		break
 	}
+	// }
+
 	event := logevent.LogEvent{
 		Timestamp: time.Now(),
 		Message:   message,
@@ -100,7 +106,10 @@ func (ic *InputConfig) Handler(w http.ResponseWriter, r *http.Request) {
 			"host": ic.hostname,
 		},
 	}
-	ic.httpChan <- event
+	if err != nil {
+		event.AddTag("httpinput error")
+	}
 	w.Write([]byte(message))
+	ic.httpChan <- event
 	return
 }
