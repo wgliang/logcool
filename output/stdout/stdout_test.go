@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/wgliang/logcool/utils"
-	"github.com/wgliang/logcool/utils/logevent"
 )
 
 func init() {
@@ -40,7 +39,7 @@ func Test_Event(t *testing.T) {
 	}
 	outchan := conf.Get(reflect.TypeOf(make(utils.OutChan))).
 		Interface().(utils.OutChan)
-	outchan <- logevent.LogEvent{
+	outchan <- utils.LogEvent{
 		Timestamp: time.Now(),
 		Message:   "outputstdout test message",
 	}

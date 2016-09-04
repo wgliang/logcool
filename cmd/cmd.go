@@ -10,7 +10,6 @@ import (
 	"strings"
 
 	"github.com/wgliang/logcool/utils"
-	_ "github.com/wgliang/logcool/utils/loader"
 	_ "github.com/wgliang/logcool/utils/logo"
 )
 

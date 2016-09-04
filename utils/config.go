@@ -9,8 +9,6 @@ import (
 
 	"github.com/codegangsta/inject"
 	"github.com/golang/glog"
-
-	"github.com/wgliang/logcool/utils/logevent"
 )
 
 const Defaultconfig = `
@@ -60,8 +58,8 @@ type Config struct {
 }
 
 // In/Out chan.
-type InChan chan logevent.LogEvent
-type OutChan chan logevent.LogEvent
+type InChan chan LogEvent
+type OutChan chan LogEvent
 
 // Set injector value.
 func (c *CommonConfig) SetInjector(inj inject.Injector) {
@@ -179,7 +177,7 @@ func formatReflect(rv reflect.Value) {
 			return
 		}
 		value := rv.Interface().(string)
-		value = logevent.FormatWithEnv(value)
+		value = FormatWithEnv(value)
 		rv.SetString(value)
 	}
 }

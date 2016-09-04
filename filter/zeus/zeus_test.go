@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/wgliang/logcool/utils"
-	"github.com/wgliang/logcool/utils/logevent"
 )
 
 func init() {
@@ -45,7 +44,7 @@ func Test_Event(t *testing.T) {
 
 	err = conf.RunFilters()
 
-	inchan <- logevent.LogEvent{
+	inchan <- utils.LogEvent{
 		Timestamp: timestamp,
 		Message:   "filter test message",
 	}

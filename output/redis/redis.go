@@ -10,7 +10,6 @@ import (
 	"github.com/garyburd/redigo/redis"
 
 	"github.com/wgliang/logcool/utils"
-	"github.com/wgliang/logcool/utils/logevent"
 )
 
 const (
@@ -28,7 +27,7 @@ type OutputConfig struct {
 	ReconnectInterval int    `json:"reconnect_interval"`
 
 	conns  *redis.Pool
-	evchan chan logevent.LogEvent
+	evchan chan utils.LogEvent
 }
 
 // Init outputredis Handler.
@@ -40,7 +39,7 @@ func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeOutputConfig, err 
 			},
 		},
 
-		evchan: make(chan logevent.LogEvent),
+		evchan: make(chan utils.LogEvent),
 	}
 	if err = utils.ReflectConfig(confraw, &conf); err != nil {
 		return
@@ -54,7 +53,7 @@ func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeOutputConfig, err 
 }
 
 // Input's event,and this is the main function of output.
-func (oc *OutputConfig) Event(event logevent.LogEvent) (err error) {
+func (oc *OutputConfig) Event(event utils.LogEvent) (err error) {
 	oc.evchan <- event
 	return
 }
@@ -66,7 +65,7 @@ func (oc *OutputConfig) loopEvent() (err error) {
 	}
 }
 
-func (oc *OutputConfig) sendEvent(event logevent.LogEvent) (err error) {
+func (oc *OutputConfig) sendEvent(event utils.LogEvent) (err error) {
 	var (
 		conn redis.Conn
 		raw  []byte

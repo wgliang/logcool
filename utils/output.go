@@ -5,14 +5,12 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/codegangsta/inject"
-
-	"github.com/wgliang/logcool/utils/logevent"
 )
 
 // Output base type interface.
 type TypeOutputConfig interface {
 	TypeConfig
-	Event(event logevent.LogEvent) (err error)
+	Event(event LogEvent) (err error)
 }
 
 // Output base type struct.
@@ -49,7 +47,7 @@ func (c *Config) runOutputs(outchan OutChan, logger *logrus.Logger) (err error) 
 			select {
 			case event := <-outchan:
 				for _, output := range outputs {
-					go func(o TypeOutputConfig, e logevent.LogEvent) {
+					go func(o TypeOutputConfig, e LogEvent) {
 						if err = o.Event(e); err != nil {
 							logger.Errorf("output failed: %v\n", err)
 						}

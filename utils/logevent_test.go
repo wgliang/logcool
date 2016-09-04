@@ -1,4 +1,4 @@
-package logevent
+package utils
 
 import (
 	"fmt"

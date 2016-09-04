@@ -11,7 +11,6 @@ import (
 	"github.com/Sirupsen/logrus"
 
 	"github.com/wgliang/logcool/utils"
-	"github.com/wgliang/logcool/utils/logevent"
 )
 
 const (
@@ -66,7 +65,7 @@ func (t *InputConfig) echo(logger *logrus.Logger, inchan utils.InChan) (err erro
 		fmt.Print("logcool#")
 		data, _, _ := reader.ReadLine()
 		command := string(data)
-		event := logevent.LogEvent{
+		event := utils.LogEvent{
 			Timestamp: time.Now(),
 			Message:   command,
 			Extra: map[string]interface{}{

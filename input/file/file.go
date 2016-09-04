@@ -20,7 +20,6 @@ import (
 	"github.com/fsnotify/fsnotify"
 
 	"github.com/wgliang/logcool/utils"
-	"github.com/wgliang/logcool/utils/logevent"
 )
 
 const (
@@ -305,7 +304,7 @@ func (ic *InputConfig) loopRead(
 			}
 		}
 
-		event := logevent.LogEvent{
+		event := utils.LogEvent{
 			Timestamp: time.Now(),
 			Message:   line,
 			Extra: map[string]interface{}{

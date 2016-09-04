@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/wgliang/logcool.svg?branch=master)](https://travis-ci.org/wgliang/logcool)
 [![GoDoc](https://godoc.org/github.com/wgliang/logcool?status.svg)](https://godoc.org/github.com/wgliang/logcool)
-[![Coverage Status](https://coveralls.io/repos/github/wgliang/logcool/badge.svg?branch=master)](https://coveralls.io/github/wgliang/logcool?branch=master)
+[![codecov](https://codecov.io/gh/wgliang/logcool/branch/master/graph/badge.svg)](https://codecov.io/gh/wgliang/logcool)
 [![Join the chat at https://gitter.im/logcool/Lobby](https://badges.gitter.im/logcool/Lobby.svg)](https://gitter.im/logcool/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Go Report Card](https://goreportcard.com/badge/github.com/wgliang/logcool)](https://goreportcard.com/report/github.com/wgliang/logcool)
 [![License](https://img.shields.io/badge/LICENSE-Apache2.0-ff69b4.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)

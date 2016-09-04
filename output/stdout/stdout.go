@@ -6,7 +6,6 @@ import (
 	"fmt"
 
 	"github.com/wgliang/logcool/utils"
-	"github.com/wgliang/logcool/utils/logevent"
 )
 
 const (
@@ -36,7 +35,7 @@ func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeOutputConfig, err 
 }
 
 // Input's event,and this is the main function of output.
-func (oc *OutputConfig) Event(event logevent.LogEvent) (err error) {
+func (oc *OutputConfig) Event(event utils.LogEvent) (err error) {
 	raw, err := event.MarshalIndent()
 	if err != nil {
 		return

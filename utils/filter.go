@@ -4,14 +4,12 @@ import (
 	"errors"
 
 	"github.com/codegangsta/inject"
-
-	"github.com/wgliang/logcool/utils/logevent"
 )
 
 // Filter base type interface.
 type TypeFilterConfig interface {
 	TypeConfig
-	Event(logevent.LogEvent) logevent.LogEvent
+	Event(LogEvent) LogEvent
 }
 
 // Filter base type struct.

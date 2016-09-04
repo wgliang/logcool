@@ -4,7 +4,6 @@ package zeus
 
 import (
 	"github.com/wgliang/logcool/utils"
-	"github.com/wgliang/logcool/utils/logevent"
 )
 
 const (
@@ -37,7 +36,7 @@ func InitHandler(confraw *utils.ConfigRaw) (tfc utils.TypeFilterConfig, err erro
 }
 
 // Filter's event,and this is the main function of filter.
-func (fc *FilterConfig) Event(event logevent.LogEvent) logevent.LogEvent {
+func (fc *FilterConfig) Event(event utils.LogEvent) utils.LogEvent {
 	if _, ok := event.Extra[fc.Key]; ok {
 		return event
 	}

@@ -11,7 +11,6 @@ import (
 	"github.com/golang/glog"
 
 	"github.com/wgliang/logcool/utils"
-	"github.com/wgliang/logcool/utils/logevent"
 )
 
 const (
@@ -26,7 +25,7 @@ type InputConfig struct {
 	Intervals int      `json:"intervals"`
 
 	hostname string
-	httpChan chan logevent.LogEvent
+	httpChan chan utils.LogEvent
 }
 
 func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err error) {
@@ -49,7 +48,7 @@ func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err e
 		glog.Errorln(err)
 		return
 	}
-	conf.httpChan = make(chan logevent.LogEvent, 10)
+	conf.httpChan = make(chan utils.LogEvent, 10)
 	retconf = &conf
 	return
 }
@@ -99,7 +98,7 @@ func (ic *InputConfig) Handler(w http.ResponseWriter, r *http.Request) {
 	}
 	// }
 
-	event := logevent.LogEvent{
+	event := utils.LogEvent{
 		Timestamp: time.Now(),
 		Message:   message,
 		Extra: map[string]interface{}{
