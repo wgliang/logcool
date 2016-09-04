@@ -1,62 +1,126 @@
-// Run Logcool in std, and the filter is zeus.You can input "hello",and it will
-// return a formate hello fmt.
+//Cmd for logcool run.Loading configuration files and information, as well as
+//logcool operating logic.
 package cmd
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
-	"os/signal"
-	"syscall"
+	"strings"
 
 	"github.com/wgliang/logcool/utils"
 	_ "github.com/wgliang/logcool/utils/loader"
 	_ "github.com/wgliang/logcool/utils/logo"
 )
 
-// Run Logcool in std, and the filter is zeus.ps:the confpath you can ignore it if you like
-func Logcool(confpath ...string) (err error) {
-	var conf utils.Config
-	// Check the path that you input,if nil will use default config.
-	if len(confpath) <= 0 {
-		conf, err = utils.LoadDefaultConfig()
-		if err != nil {
-			return
-		}
-	} else if _, err = os.Stat(confpath[0]); err != nil {
-		fmt.Println("Can not find config-file " + confpath[0] + " and will use default config(stdin2stdout)!")
-		conf, err = utils.LoadDefaultConfig()
-		if err != nil {
-			return
-		}
-	} else {
-		conf, err = utils.LoadFromFile(confpath[0])
-		if err != nil {
-			fmt.Println("Config-file " + confpath[0] + " formate error and will use default config(stdin2stdout)!")
-			conf, err = utils.LoadDefaultConfig()
-			if err != nil {
-				return
-			}
-		}
-	}
-	// Run all Input plugs
-	if err = conf.RunInputs(); err != nil {
-		return
-	}
-	// Run all Filter plugs
-	if err = conf.RunFilters(); err != nil {
-		return
-	}
-	// Run all Output plugs
-	if err = conf.RunOutputs(); err != nil {
-		return
-	}
+const (
+	DEFAULTTEMPLATE = "./templates"
+	DEFAULTFILE     = "default.json"
+)
 
-	// 捕获ctrl-c,平滑退出
-	chExit := make(chan os.Signal, 1)
-	signal.Notify(chExit, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL)
-	select {
-	case <-chExit:
-		fmt.Println("logcool EXIT...Bye.")
+// load config from Command.
+func Command(template string) (confs []utils.Config) {
+	conf, err := utils.LoadFromString(template)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	confs = append(confs, conf)
+	return
+}
+
+// load config from user's template.
+func Custom(path string) (confs []utils.Config) {
+	conf, err := utils.LoadFromFile(path)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	confs = append(confs, conf)
+	return
+}
+
+// load all templates in default dir.
+func LoadTemplates() (confs []utils.Config) {
+	tempaltes, _ := fileList(DEFAULTTEMPLATE, DEFAULTFILE)
+	for _, template := range tempaltes {
+		conf, err := utils.LoadFromFile(template)
+		if err != nil {
+			log.Println(err)
+			continue
+		} else {
+			confs = append(confs, conf)
+		}
+	}
+	if len(confs) <= 0 {
+		conf, err := utils.LoadDefaultConfig()
+		if err != nil {
+			return nil
+		} else {
+			confs = append(confs, conf)
+		}
 	}
 	return
+}
+
+// Run logcool.
+func Run(confs []utils.Config) (err error) {
+	for _, conf := range confs {
+		if err = conf.RunInputs(); err != nil {
+			return
+		}
+
+		if err = conf.RunFilters(); err != nil {
+			return
+		}
+
+		if err = conf.RunOutputs(); err != nil {
+			return
+		}
+	}
+	return
+}
+
+// Help information.
+func Help() {
+	fmt.Println(`
+	-c,-command,  "run in command, stdin2stdout.
+	-t,-template, "input templates in command.
+	-v,-version,  "show version number.
+	-h,-help,     "haha,I know you need me.
+	`)
+}
+
+// Logcool's version information.
+func Version() {
+	version, err := ioutil.ReadFile("./VERSION.md")
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(string(version))
+}
+
+// list all config templates.
+func fileList(dirPath string, suffix string) (files []string, err error) {
+	files = make([]string, 0, 10)
+
+	dir, err := ioutil.ReadDir(dirPath)
+	if err != nil {
+		return nil, err
+	}
+
+	PthSep := string(os.PathSeparator)
+	suffix = strings.ToUpper(suffix)
+
+	for _, fi := range dir {
+		if fi.IsDir() {
+			continue
+		}
+		if strings.HasSuffix(strings.ToUpper(fi.Name()), suffix) {
+			files = append(files, dirPath+PthSep+fi.Name())
+		}
+	}
+
+	return files, nil
 }

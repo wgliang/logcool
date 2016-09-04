@@ -9,7 +9,6 @@ import (
 
 	"github.com/wgliang/logcool/cmd"
 	"github.com/wgliang/logcool/utils"
-	"github.com/wgliang/logcool/utils/config"
 )
 
 var (
@@ -25,30 +24,32 @@ func main() {
 	flag.Parse()
 
 	if *version != false {
-		config.Version()
+		cmd.Version()
 		os.Exit(0)
 	}
 
 	if *help != false {
-		config.Help()
+		cmd.Help()
 		os.Exit(0)
 	}
+	var confs []utils.Config
 
 	if *std != false {
-		cmd.Logcool()
-		os.Exit(0)
-	}
-
-	var confs []utils.Config
-	if *custom != "" {
-		confs = config.Custom(*custom)
+		// cmd.Logcool()
+		conf, err := utils.LoadDefaultConfig()
+		if err != nil {
+			fmt.Println(err)
+		}
+		confs = append(confs, conf)
+	} else if *custom != "" {
+		confs = cmd.Custom(*custom)
 	} else if *command != "" {
-		confs = config.Command(*command)
+		confs = cmd.Command(*command)
 	} else {
-		confs = config.LoadTemplates()
+		confs = cmd.LoadTemplates()
 	}
 
-	config.Run(confs)
+	cmd.Run(confs)
 
 	// 捕获ctrl-c,平滑退出
 	chExit := make(chan os.Signal, 1)
