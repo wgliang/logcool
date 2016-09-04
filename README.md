@@ -13,16 +13,16 @@ Logcool is an open source project to collect, filter ,transfer and response any 
 
 Logcool's design learn from Heka and Logstash and it's implementation was inspired by gogstash. What's more, the logcool's goal is to be a completely independent project and not much rely on other non-standard libiaries.
 
-Logcool is still in its infancy, then there will be a big change, especially in terms of code.So it is not recommended for commercial use now.
+Because it is difficult to fully meet the needs of different services, this repository provides basic plugins, such as encryption and decryption of data, compression and decompression of data, data format conversion and so on. Importantly, you can easily develop a plugin according to your needs, and easily use it.
 
-
+And can use logcool any way you can.
 
 ## Getting started
 
 Logcool can collect all-types los or event-flow data, and support some input/output types.Besides,you can  new your's plugs if you need it. To get started, [check out the installation instructions in the documentation](https://godoc.org/github.com/wgliang/logcool).
 
 ## Using Example
-
+A easy stdin2stdout example. 
 ![Logcool](./logcool.gif)
 
 ## Other Contributor

@@ -4,6 +4,7 @@
 [![GoDoc](https://godoc.org/github.com/wgliang/logcool?status.svg)](https://godoc.org/github.com/wgliang/logcool)
 [![Join the chat at https://gitter.im/logcool/Lobby](https://badges.gitter.im/logcool/Lobby.svg)](https://gitter.im/logcool/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Go Report Card](https://goreportcard.com/badge/github.com/wgliang/logcool)](https://goreportcard.com/report/github.com/wgliang/logcool)
+[![License](https://img.shields.io/badge/LICENSE-Apache2.0-ff69b4.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 
 Logcool是一个开源的集日志和事件流数据收集，过滤，传输及响应的轻量级数据采集系统。
@@ -12,7 +13,9 @@ Logcool是一个开源的集日志和事件流数据收集，过滤，传输及�
 
 Logcool的设计灵感来自Heka和Logstash，它的实现受到了gogstash的启发。重要的是它的目标在于解决前面系统的一些弊端，例如系统庞大或者不能容易的在业务环境中部署，在这方面gogsyash实现的已经非常好了，不过我不看好的是依赖过多非标准库，在结构上也不够简单清晰。这是为什么我将gogstash重构并重新设计一些逻辑的原因。
 
-Logcool 目前还处于“婴儿期”，所以未来会有很大改变，不仅在设计上，在代码上也会有重大改变，所以非常不建议目前直接用于生产环境中。
+由于很难完全满足不同场景下的需求，这个库更多的是提供基础插件，例如数据的加密和解密，数据的压缩和解压缩，数据格式的转换等等。重要的是，你可以根据自己的需要轻易的开发符合自己需求的插件，并轻松的使用它。
+
+你可以以任何的方式使用logcool。
 
 ## Getting started
 
