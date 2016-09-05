@@ -51,7 +51,9 @@ Some plugins that had finished and will developed in the future.
 - mysql
 - pg
 
-## [Other Contributor](https://github.com/wgliang/logcool/docs/README_ZH.md)
+## Versions
+
+[versions](https://github.com/wgliang/logcool/docs/README_ZH.md)
 
 ## Other Contributor
 
