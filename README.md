@@ -22,8 +22,36 @@ And can use logcool any way you can.
 Logcool can collect all-types los or event-flow data, and support some input/output types.Besides,you can  new your's plugs if you need it. To get started, [check out the installation instructions in the documentation](https://godoc.org/github.com/wgliang/logcool).
 
 ## Using Example
+
 A easy stdin2stdout example. 
 ![Logcool](./logcool.gif)
+
+## Plugins
+
+Some plugins that had finished and will developed in the future.
+
+- input
+[file](https://github.com/wgliang/logcool/tree/master/input/file)
+[stdin](https://github.com/wgliang/logcool/tree/master/input/stdin)
+[http](https://github.com/wgliang/logcool/tree/master/input/stdin)
+
+- filter
+[zeus](https://github.com/wgliang/logcool/tree/master/filter/zeus)
+metrics
+
+- codec
+aes
+zip
+json
+
+- output
+[stdout](https://github.com/wgliang/logcool/tree/master/output/stdout)
+[redis](https://github.com/wgliang/logcool/tree/master/output/redis)
+influxdb
+mysql
+pg
+
+## [Other Contributor](https://github.com/wgliang/logcool/docs/README_ZH.md)
 
 ## Other Contributor
 
