@@ -53,7 +53,7 @@ Some plugins that had finished and will developed in the future.
 
 ## Versions
 
-[versions](https://github.com/wgliang/logcool/docs/README_ZH.md)
+[versions](https://github.com/wgliang/logcool/blob/master/docs/VERSION_UPDATE.md)
 
 ## Other Contributor
 
