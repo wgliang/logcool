@@ -30,26 +30,26 @@ A easy stdin2stdout example.
 
 Some plugins that had finished and will developed in the future.
 
-- input
-[file](https://github.com/wgliang/logcool/tree/master/input/file)
-[stdin](https://github.com/wgliang/logcool/tree/master/input/stdin)
-[http](https://github.com/wgliang/logcool/tree/master/input/stdin)
+### input
+- [file](https://github.com/wgliang/logcool/tree/master/input/file)
+- [stdin](https://github.com/wgliang/logcool/tree/master/input/stdin)
+- [http](https://github.com/wgliang/logcool/tree/master/input/stdin)
 
-- filter
-[zeus](https://github.com/wgliang/logcool/tree/master/filter/zeus)
-metrics
+### filter
+- [zeus](https://github.com/wgliang/logcool/tree/master/filter/zeus)
+- metrics
 
-- codec
-aes
-zip
-json
+### codec
+- aes
+- zip
+- json
 
-- output
-[stdout](https://github.com/wgliang/logcool/tree/master/output/stdout)
-[redis](https://github.com/wgliang/logcool/tree/master/output/redis)
-influxdb
-mysql
-pg
+### output
+- [stdout](https://github.com/wgliang/logcool/tree/master/output/stdout)
+- [redis](https://github.com/wgliang/logcool/tree/master/output/redis)
+- influxdb
+- mysql
+- pg
 
 ## [Other Contributor](https://github.com/wgliang/logcool/docs/README_ZH.md)
 
