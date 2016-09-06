@@ -17,6 +17,10 @@ type OutputConfig struct {
 	utils.OutputConfig
 }
 
+func init() {
+	utils.RegistOutputHandler(ModuleName, InitHandler)
+}
+
 // Init outputstdout Handler.
 func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeOutputConfig, err error) {
 	conf := OutputConfig{

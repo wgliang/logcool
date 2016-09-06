@@ -15,7 +15,7 @@ Logcool's design learn from Heka and Logstash and it's implementation was inspir
 
 Because it is difficult to fully meet the needs of different services, this repository provides basic plugins, such as encryption and decryption of data, compression and decompression of data, data format conversion, support files, command line, http, or the output of any system or redis, influxDB, MySQL database and so on. Importantly, you can easily develop a plugin according to your needs, and easily use it.
 
-And can use logcool any way you can.
+You can use logcool in any way.
 
 ## Getting started
 
@@ -28,7 +28,7 @@ A easy stdin2stdout example.
 
 ## Plugins
 
-Some plugins that had finished and will developed in the future.
+Some plugins that had finished and will develope in the future.
 
 ### input
 - [file](https://github.com/wgliang/logcool/tree/master/input/file)

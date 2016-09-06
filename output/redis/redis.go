@@ -30,6 +30,10 @@ type OutputConfig struct {
 	evchan chan utils.LogEvent
 }
 
+func init() {
+	utils.RegistOutputHandler(ModuleName, InitHandler)
+}
+
 // Init outputredis Handler.
 func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeOutputConfig, err error) {
 	conf := OutputConfig{

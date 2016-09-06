@@ -17,6 +17,10 @@ type FilterConfig struct {
 	Value string `json:"value"`
 }
 
+func init() {
+	utils.RegistFilterHandler(ModuleName, InitHandler)
+}
+
 // Init zeus Handler.
 func InitHandler(confraw *utils.ConfigRaw) (tfc utils.TypeFilterConfig, err error) {
 	conf := FilterConfig{

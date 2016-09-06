@@ -28,6 +28,10 @@ type InputConfig struct {
 	httpChan chan utils.LogEvent
 }
 
+func init() {
+	utils.RegistInputHandler(ModuleName, InitHandler)
+}
+
 func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err error) {
 	glog.Infoln(ModuleName + " input-plug Init...")
 	conf := InputConfig{

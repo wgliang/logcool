@@ -24,6 +24,10 @@ type InputConfig struct {
 	hostname string
 }
 
+func init() {
+	utils.RegistInputHandler(ModuleName, InitHandler)
+}
+
 // Init stdininput Handler.
 func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err error) {
 	conf := InputConfig{

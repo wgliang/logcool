@@ -49,6 +49,10 @@ type InputConfig struct {
 	SinceLastSaveTime time.Time
 }
 
+func init() {
+	utils.RegistInputHandler(ModuleName, InitHandler)
+}
+
 // Init fileinput Handler.
 func InitHandler(confraw *utils.ConfigRaw) (retconf utils.TypeInputConfig, err error) {
 	conf := InputConfig{
