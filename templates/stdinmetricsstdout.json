@@ -1,0 +1,19 @@
+{
+    "input": [
+        {
+            "type": "stdin"
+        }
+    ],
+    "filter": [
+        {
+            "type": "metrics",
+            "tag":["timeout","refuse"],
+            "alarm":[100,20]
+        }
+    ],
+    "output": [
+        {
+            "type": "stdout"
+        }
+    ]
+}

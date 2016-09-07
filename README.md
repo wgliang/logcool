@@ -38,7 +38,7 @@ Some plugins that had finished and will develope in the future.
 
 ### filter
 - [zeus](https://github.com/wgliang/logcool/tree/master/filter/zeus)
-- metrics
+- [metrics](https://github.com/wgliang/logcool/tree/master/filter/metrics)
 - [grok](https://github.com/wgliang/logcool/tree/master/filter/grok)
 
 ### codec

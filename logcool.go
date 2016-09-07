@@ -9,6 +9,7 @@ import (
 
 	"github.com/wgliang/logcool/cmd"
 	_ "github.com/wgliang/logcool/filter/grok"
+	_ "github.com/wgliang/logcool/filter/metrics"
 	_ "github.com/wgliang/logcool/filter/zeus"
 	_ "github.com/wgliang/logcool/input/collectd"
 	_ "github.com/wgliang/logcool/input/file"
