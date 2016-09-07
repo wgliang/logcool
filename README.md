@@ -31,9 +31,10 @@ A easy stdin2stdout example.
 Some plugins that had finished and will develope in the future.
 
 ### input
-- [file](https://github.com/wgliang/logcool/tree/master/input/file)
-- [stdin](https://github.com/wgliang/logcool/tree/master/input/stdin)
-- [http](https://github.com/wgliang/logcool/tree/master/input/stdin)
+- [file](https://github.com/wgliang/logcool/tree/master/input/file) Source data from files.
+- [stdin](https://github.com/wgliang/logcool/tree/master/input/stdin) Source data from console.
+- [http](https://github.com/wgliang/logcool/tree/master/input/stdin) Source data from http.
+- [collectd](https://github.com/wgliang/logcool/tree/master/input/collectd) Monitor and collect system performance data.
 
 ### filter
 - [zeus](https://github.com/wgliang/logcool/tree/master/filter/zeus)
@@ -62,3 +63,13 @@ Logcool learn from gogstash much. Thank you for your contribution, and I also le
 ## Licensing
 
 Logcool is licensed under the Apache License, Version 2.0. See LICENSE for the full license text.
+
+## Welcome to Contribute
+
+1.Fork it
+2.Create your feature branch
+3.Commit your changes (git commit -am 'Add some feature'),and no test error.
+4.Push to the branch
+5.Create new Pull Request
+
+Documentation or correcting comments are also welcome.

@@ -15,7 +15,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Sirupsen/logrus"
 	log "github.com/Sirupsen/logrus"
 	"github.com/fsnotify/fsnotify"
 
@@ -165,7 +164,7 @@ func (ic *InputConfig) LoopCheckSaveSinceInfos() (err error) {
 	}
 }
 
-func (ic *InputConfig) monitor(logger *logrus.Logger, inchan utils.InChan) (err error) {
+func (ic *InputConfig) monitor(logger *log.Logger, inchan utils.InChan) (err error) {
 	defer func() {
 		if err != nil {
 			logger.Errorln(err)
@@ -223,7 +222,7 @@ func (ic *InputConfig) monitor(logger *logrus.Logger, inchan utils.InChan) (err 
 func (ic *InputConfig) loopRead(
 	readEventChan chan fsnotify.Event,
 	fpath string,
-	logger *logrus.Logger,
+	logger *log.Logger,
 	inchan utils.InChan,
 ) (err error) {
 	var (
