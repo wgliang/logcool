@@ -1,0 +1,19 @@
+{
+    "input": [
+        {
+            "type": "stdin"
+        }
+    ],
+    "filter": [
+        {
+            "type": "grok",
+            "macth":"2016-09",
+            "model":"over"
+        }
+    ],
+    "output": [
+        {
+            "type": "stdout"
+        }
+    ]
+}
