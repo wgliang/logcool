@@ -31,29 +31,29 @@ A easy stdin2stdout example.
 Some plugins that had finished and will develope in the future.
 
 ### input
-- [file](https://github.com/wgliang/logcool/tree/master/input/file) Source data from files.
-- [stdin](https://github.com/wgliang/logcool/tree/master/input/stdin) Source data from console.
-- [http](https://github.com/wgliang/logcool/tree/master/input/stdin) Source data from http.
-- [collectd](https://github.com/wgliang/logcool/tree/master/input/collectd) Monitor and collect system performance data.
+- [file](https://github.com/wgliang/logcool/tree/master/input/file) source data from files,such as log file.
+- [stdin](https://github.com/wgliang/logcool/tree/master/input/stdin) get data from the console, debugging and example will need it.
+- [http](https://github.com/wgliang/logcool/tree/master/input/stdin) get data from the network, support post, get, etc.
+- [collectd](https://github.com/wgliang/logcool/tree/master/input/collectd) monitor and control system performance data, such as CPU, memory, network, hard disk, etc.
 
 ### filter
-- [zeus](https://github.com/wgliang/logcool/tree/master/filter/zeus)
-- [metrics](https://github.com/wgliang/logcool/tree/master/filter/metrics)
-- [grok](https://github.com/wgliang/logcool/tree/master/filter/grok)
+- [zeus](https://github.com/wgliang/logcool/tree/master/filter/zeus) simple label filter.
+- [metrics](https://github.com/wgliang/logcool/tree/master/filter/metrics) dot counter, can be used for alarm and dashboard generation.
+- [grok](https://github.com/wgliang/logcool/tree/master/filter/grok) regular filtering data, support multi pattern matching.
 
 ### codec
-- aes
-- zip
-- json
+- aes encryption
+- zip compression
+- json format
 
 ### output
-- [stdout](https://github.com/wgliang/logcool/tree/master/output/stdout)
-- [redis](https://github.com/wgliang/logcool/tree/master/output/redis)
-- influxdb
-- email
-- exec
-- mysql
-- pg
+- [stdout](https://github.com/wgliang/logcool/tree/master/output/stdout) output to console.
+- [redis](https://github.com/wgliang/logcool/tree/master/output/redis) enter data into the redis database.
+- influxdb data import influxdb, this is useful for timing data
+- email send messages via email, such as alerts and service exception notifications.
+- exec send a message to execute a command or script.
+- mysql Write data to MySQL
+- pg Write data to pg
 
 ## Versions
 
