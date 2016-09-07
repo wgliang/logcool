@@ -1,5 +1,5 @@
 //Filter-plug: metrics
-//metrics is regexp plugin and for filter data you like.
+//metrics is just for metrics and count.
 package metrics
 
 import (

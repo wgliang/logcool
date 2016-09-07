@@ -25,6 +25,39 @@ Logcool 可以收集各类型的日志和事件数据，并且支持输入／输
 
 ![Logcool](../logcool.gif)
 
+## Plugins
+
+已经完成和未来会增加的插件：
+
+### input
+- [file](https://github.com/wgliang/logcool/tree/master/input/file) 数据来源是文件，例如日志文件
+- [stdin](https://github.com/wgliang/logcool/tree/master/input/stdin) 从控制台获取数据，这个调试和示例会用到
+- [http](https://github.com/wgliang/logcool/tree/master/input/stdin) 从网络获取数据，支持post，get等
+- [collectd](https://github.com/wgliang/logcool/tree/master/input/collectd) 监控系统性能数据，例如CPU，内存，网络，硬盘等等
+
+### filter
+- [zeus](https://github.com/wgliang/logcool/tree/master/filter/zeus) 简单的打标签过滤器
+- [metrics](https://github.com/wgliang/logcool/tree/master/filter/metrics) 打点计数器，可用于告警和dashboard生成
+- [grok](https://github.com/wgliang/logcool/tree/master/filter/grok) 正则过滤数据，支持多模式匹配
+
+### codec
+- aes 加密
+- zip 压缩
+- json json格式化
+
+### output
+- [stdout](https://github.com/wgliang/logcool/tree/master/output/stdout) 标准输出到控制台
+- [redis](https://github.com/wgliang/logcool/tree/master/output/redis) 将数据打入redis数据库
+- influxdb 数据导入influxdb，这个对于时序数据很有用
+- email 通过email发送消息，比如告警和服务异常通知
+- exec 发送消息执行命令或脚本
+- mysql 将数据写入mysql
+- pg 将数据写入pg
+
+## Versions
+
+[版本通知](https://github.com/wgliang/logcool/blob/master/docs/VERSION_UPDATE.md)
+
 ## Other Contributor
 
 Logcool 从gogstash而来，在此感谢@tsaikd
@@ -32,3 +65,8 @@ Logcool 从gogstash而来，在此感谢@tsaikd
 ## Licensing
 
 Logcool is licensed under the Apache License, Version 2.0. See LICENSE for the full license text.
+
+## Welcome to Contribute
+
+
+也欢迎修改和完善文档。

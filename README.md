@@ -50,6 +50,8 @@ Some plugins that had finished and will develope in the future.
 - [stdout](https://github.com/wgliang/logcool/tree/master/output/stdout)
 - [redis](https://github.com/wgliang/logcool/tree/master/output/redis)
 - influxdb
+- email
+- exec
 - mysql
 - pg
 
