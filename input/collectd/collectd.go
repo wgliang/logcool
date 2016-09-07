@@ -151,6 +151,7 @@ func (t *InputConfig) monitor(logger *logrus.Logger, inchan utils.InChan) (err e
 		stsinfo, err := json.Marshal(info)
 		if err != nil {
 			fmt.Println(err)
+			break
 		}
 
 		message := string(stsinfo)
