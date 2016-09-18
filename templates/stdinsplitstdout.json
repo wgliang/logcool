@@ -1,0 +1,18 @@
+{
+    "input": [
+        {
+            "type": "stdin"
+        }
+    ],
+    "filter": [
+        {
+            "type": "split",
+            "separator":";"
+        }
+    ],
+    "output": [
+        {
+            "type": "stdout"
+        }
+    ]
+}

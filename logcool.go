@@ -10,6 +10,7 @@ import (
 	"github.com/wgliang/logcool/cmd"
 	_ "github.com/wgliang/logcool/filter/grok"
 	_ "github.com/wgliang/logcool/filter/metrics"
+	_ "github.com/wgliang/logcool/filter/split"
 	_ "github.com/wgliang/logcool/filter/zeus"
 	_ "github.com/wgliang/logcool/input/collectd"
 	_ "github.com/wgliang/logcool/input/file"
@@ -17,6 +18,7 @@ import (
 	_ "github.com/wgliang/logcool/input/stdin"
 	_ "github.com/wgliang/logcool/output/redis"
 	_ "github.com/wgliang/logcool/output/stdout"
+	_ "github.com/wgliang/logcool/output/lexec"
 	"github.com/wgliang/logcool/utils"
 )
 

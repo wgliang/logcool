@@ -3,7 +3,6 @@
 package split
 
 import (
-	"encoding/json"
 	"strings"
 
 	"github.com/wgliang/logcool/utils"
@@ -52,8 +51,7 @@ func (fc *FilterConfig) Event(event utils.LogEvent) utils.LogEvent {
 		event.Message = args[0]
 	} 
 	
-	commandargs, _ := json.Marshal(args[1:])
-	event.Extra["args"] = event.Format(string(commandargs))
+	event.Extra["args"] = args[1:]
 
 	return event
 }
