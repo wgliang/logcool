@@ -40,6 +40,7 @@ Some plugins that had finished and will develope in the future.
 - [zeus](https://github.com/wgliang/logcool/tree/master/filter/zeus) simple label filter.
 - [metrics](https://github.com/wgliang/logcool/tree/master/filter/metrics) dot counter, can be used for alarm and dashboard generation.
 - [grok](https://github.com/wgliang/logcool/tree/master/filter/grok) regular filtering data, support multi pattern matching.
+- [split](https://github.com/wgliang/logcool/tree/master/filter/split) split command parameter based on the separator.
 
 ### codec
 - aes encryption
@@ -51,7 +52,7 @@ Some plugins that had finished and will develope in the future.
 - [redis](https://github.com/wgliang/logcool/tree/master/output/redis) enter data into the redis database.
 - influxdb data import influxdb, this is useful for timing data
 - email send messages via email, such as alerts and service exception notifications.
-- exec send a message to execute a command or script.
+- [lexec](https://github.com/wgliang/logcool/tree/master/output/lexec) send a message to execute a command or script.
 - mysql Write data to MySQL
 - pg Write data to pg
 
