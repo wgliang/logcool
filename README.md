@@ -42,16 +42,11 @@ Some plugins that had finished and will develope in the future.
 - [grok](https://github.com/wgliang/logcool/tree/master/filter/grok) regular filtering data, support multi pattern matching.
 - [split](https://github.com/wgliang/logcool/tree/master/filter/split) split command parameter based on the separator.
 
-### codec
-- aes encryption
-- zip compression
-- json format
-
 ### output
 - [stdout](https://github.com/wgliang/logcool/tree/master/output/stdout) output to console.
 - [redis](https://github.com/wgliang/logcool/tree/master/output/redis) enter data into the redis database.
 - influxdb data import influxdb, this is useful for timing data
-- email send messages via email, such as alerts and service exception notifications.
+- [email](https://github.com/wgliang/logcool/tree/master/output/email) send messages via email, such as alerts and service exception notifications.
 - [lexec](https://github.com/wgliang/logcool/tree/master/output/lexec) send a message to execute a command or script.
 - mysql Write data to MySQL
 - pg Write data to pg

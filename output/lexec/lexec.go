@@ -3,8 +3,8 @@
 package outputexec
 
 import (
-	"os/exec"
 	"errors"
+	"os/exec"
 
 	"github.com/wgliang/logcool/utils"
 )
@@ -48,7 +48,7 @@ func (oc *OutputConfig) Event(event utils.LogEvent) (err error) {
 	args := event.Extra["args"].([]string)
 	// run the proc and get all the cmd info.
 	Cmd := exec.Command(command, args...)
-	
+
 	// start the commd.
 	if err = Cmd.Start(); err != nil {
 		return err

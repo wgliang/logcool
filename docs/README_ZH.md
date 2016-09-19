@@ -39,18 +39,14 @@ Logcool 可以收集各类型的日志和事件数据，并且支持输入／输
 - [zeus](https://github.com/wgliang/logcool/tree/master/filter/zeus) 简单的打标签过滤器
 - [metrics](https://github.com/wgliang/logcool/tree/master/filter/metrics) 打点计数器，可用于告警和dashboard生成
 - [grok](https://github.com/wgliang/logcool/tree/master/filter/grok) 正则过滤数据，支持多模式匹配
-
-### codec
-- aes 加密
-- zip 压缩
-- json json格式化
+- [split](https://github.com/wgliang/logcool/tree/master/filter/split) 根据分隔符分割日志或事件信息，生成命令行参数
 
 ### output
 - [stdout](https://github.com/wgliang/logcool/tree/master/output/stdout) 标准输出到控制台
 - [redis](https://github.com/wgliang/logcool/tree/master/output/redis) 将数据打入redis数据库
 - influxdb 数据导入influxdb，这个对于时序数据很有用
-- email 通过email发送消息，比如告警和服务异常通知
-- exec 发送消息执行命令或脚本
+- [email](https://github.com/wgliang/logcool/tree/master/output/email)通过email发送消息，比如告警和服务异常通知
+- [lexec](https://github.com/wgliang/logcool/tree/master/output/lexec) 发送消息执行命令或脚本
 - mysql 将数据写入mysql
 - pg 将数据写入pg
 

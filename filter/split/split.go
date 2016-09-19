@@ -15,7 +15,7 @@ const (
 // Define split' config.
 type FilterConfig struct {
 	utils.FilterConfig
-	Separator   string `json:"separator"`
+	Separator string `json:"separator"`
 }
 
 func init() {
@@ -49,8 +49,8 @@ func (fc *FilterConfig) Event(event utils.LogEvent) utils.LogEvent {
 	args := strings.Split(event.Message, fc.Separator)
 	if len(args) > 0 {
 		event.Message = args[0]
-	} 
-	
+	}
+
 	event.Extra["args"] = args[1:]
 
 	return event

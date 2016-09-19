@@ -16,9 +16,10 @@ import (
 	_ "github.com/wgliang/logcool/input/file"
 	_ "github.com/wgliang/logcool/input/http"
 	_ "github.com/wgliang/logcool/input/stdin"
+	_ "github.com/wgliang/logcool/output/email"
+	_ "github.com/wgliang/logcool/output/lexec"
 	_ "github.com/wgliang/logcool/output/redis"
 	_ "github.com/wgliang/logcool/output/stdout"
-	_ "github.com/wgliang/logcool/output/lexec"
 	"github.com/wgliang/logcool/utils"
 )
 
