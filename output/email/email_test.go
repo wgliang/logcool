@@ -16,7 +16,12 @@ func init() {
 func Test_InitHandler(t *testing.T) {
 	conf, err := utils.LoadFromString(`{
 		"output": [{
-	           "type": "stdout"
+	        "type": "email",
+            "server":"smtp.163.com:25",
+            "from":"XXX@163.com",
+            "password":"XXXXXXXXXX",
+            "to":["YTYYYYYY@163.com"],
+            "cc":"YYYYYYYY@163.com"
 	       }]
 	}`)
 	var confraw *utils.ConfigRaw
@@ -29,7 +34,12 @@ func Test_InitHandler(t *testing.T) {
 func Test_Event(t *testing.T) {
 	conf, err := utils.LoadFromString(`{
 		"output": [{
-			"type": "stdout"
+			"type": "email",
+            "server":"smtp.163.com:25",
+            "from":"XXXXXXX@163.com",
+            "password":"XXXXXXXX",
+            "to":["XXXX@163.com"],
+            "cc":"YYYYYYYY@163.com"
 		}]
 	}`)
 
