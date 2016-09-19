@@ -15,10 +15,10 @@
         {
             "type": "email",
             "server":"smtp.163.com:25",
-            "from":"wgl672@163.com",
-            "password":"wgl5124991",
-            "to":["liangcszzu@163.com"],
-            "cc":"liangcszzu@163.com"
+            "from":"XXXXX@163.com",
+            "password":"XXXXXXXX",
+            "to":["YYYYYYYY@163.com"],
+            "cc":"YYYYYYYYYYY@163.com"
         }
     ]
 }

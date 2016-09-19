@@ -18,10 +18,10 @@ func Test_InitHandler(t *testing.T) {
 		"output": [{
 	        "type": "email",
             "server":"smtp.163.com:25",
-            "from":"wgl672@163.com",
-            "password":"wgl5124991",
-            "to":["liangcszzu@163.com"],
-            "cc":"liangcszzu@163.com"
+            "from":"XXX@163.com",
+            "password":"XXXXXXXXXX",
+            "to":["YTYYYYYY@163.com"],
+            "cc":"YYYYYYYY@163.com"
 	       }]
 	}`)
 	var confraw *utils.ConfigRaw
@@ -36,10 +36,10 @@ func Test_Event(t *testing.T) {
 		"output": [{
 			"type": "email",
             "server":"smtp.163.com:25",
-            "from":"wgl672@163.com",
-            "password":"wgl5124991",
-            "to":["liangcszzu@163.com"],
-            "cc":"liangcszzu@163.com"
+            "from":"XXXXXXX@163.com",
+            "password":"XXXXXXXX",
+            "to":["XXXX@163.com"],
+            "cc":"YYYYYYYY@163.com"
 		}]
 	}`)
 

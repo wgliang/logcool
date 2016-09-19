@@ -75,9 +75,9 @@ func (oc *OutputConfig) Send(event utils.LogEvent) error {
 
 	d := gomail.NewDialer(server[0], port, username[0], oc.Password)
 
-	// Send the email to Bob, Cora and Dan.
+	// Send the email.
 	if err := d.DialAndSend(m); err != nil {
-		panic(err)
+		return err
 	}
 
 	return nil
