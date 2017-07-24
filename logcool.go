@@ -22,7 +22,7 @@ import (
 	_ "github.com/wgliang/logcool/output/stdout"
 	"github.com/wgliang/logcool/utils"
 )
-
+// config
 var (
 	conf    = flag.String("config", "", "path to config.json file")
 	command = flag.String("command", "", "run in command, stdin2stdout.")
